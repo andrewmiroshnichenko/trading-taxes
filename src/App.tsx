@@ -1,7 +1,7 @@
-import React from 'react';
-import { FileInput } from './components/FileIntput';
+import React from "react";
+import { FileInput } from "./components/FileInput";
 
-function App() {
+function App(): JSX.Element {
   return (
     <div>
       <FileInput />
