@@ -1,6 +1,6 @@
 import React from "react";
 import { getFileContents } from "../services/fileParser";
-import { transformCsvToRevolut } from "../services/transformers/revoluteToData";
+import { transformRevolutCsvToGeneric } from "../services/transformers/revoluteToGeneric";
 
 export const FileInput: React.FunctionComponent = () => {
   const onChange = async (
@@ -10,7 +10,7 @@ export const FileInput: React.FunctionComponent = () => {
 
     if (file) {
       const text = await getFileContents(file);
-      console.log(transformCsvToRevolut(text));
+      console.log(transformRevolutCsvToGeneric(text));
     }
   };
   return <input type="file" onChange={onChange} />;

@@ -1,6 +1,16 @@
-const REVOLUT_ROW_PROPERTIES = [
+interface GenericDataItem {
+  tradeDate: string;
+  currency: string;
+  activityType: string;
+  symbol: string;
+  quantity: string;
+  price: string;
+  amount: string;
+}
+
+const REVOLUT_ROW_PROPERTIES: (keyof GenericDataItem | null)[] = [
   "tradeDate",
-  "settleDate",
+  null,
   "currency",
   "activityType",
   null,
@@ -13,11 +23,8 @@ const REVOLUT_ROW_PROPERTIES = [
 const validActivityTypes = new Set(["SELL", "BUY", "DIV", "DIVNRA"]);
 
 // TODO export this interface
-interface GenericDataItem {
-  [key: string]: string;
-}
 
-export const mapCsvRowToRevolutObject = (
+export const mapRevolutCsvRowToGenericObject = (
   acc: GenericDataItem,
   item: string,
   index: number
@@ -34,9 +41,9 @@ export const transformRevolutRow = (rowString: string): GenericDataItem =>
   rowString
     .replace(/\\"/g, "")
     .split(",")
-    .reduce(mapCsvRowToRevolutObject, {} as GenericDataItem);
+    .reduce(mapRevolutCsvRowToGenericObject, {} as GenericDataItem);
 
-export const transformCsvToRevolut = (text: string): GenericDataItem[] =>
+export const transformRevolutCsvToGeneric = (text: string): GenericDataItem[] =>
   text
     .split("\n")
     .map(transformRevolutRow)
