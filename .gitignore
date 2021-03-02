@@ -104,4 +104,4 @@ dist
 .tern-port
 
 # Current project's bild folder
-build
+build/
