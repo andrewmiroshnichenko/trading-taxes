@@ -2,13 +2,13 @@ type SupportedCurrencies = "USD";
 
 export interface Rate {
   date: string;
-  rate: number;
+  value: number;
   currencyCode: SupportedCurrencies;
 }
 
 export interface NbpResponse {
   code: SupportedCurrencies;
-  rates: Omit<Rate, "currencyCode">[];
+  rates: { mid: number; effectiveDate: string }[];
 }
 
 export interface GenericDataItem {

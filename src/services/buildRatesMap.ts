@@ -1,0 +1,9 @@
+import { Rate } from "../types";
+
+export const buildRatesMap = (rates: Rate[]): Map<string, number> => {
+  return rates.reduce((acc, rate) => {
+    console.log(acc, rate);
+    acc.set(rate.date, rate.value);
+    return acc;
+  }, new Map<string, number>());
+};

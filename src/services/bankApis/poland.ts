@@ -21,15 +21,13 @@ export const geUsdRatesForDatesRangeInJson = async ({
     if (isNpbResponse(response)) {
       return response;
     } else {
-      throw new Error();
+      throw new Error("NBP response format changed dramatically ");
     }
   });
-  if (jsonData.rates && jsonData.code) {
-    return jsonData.rates.map((rate) => ({
-      ...rate,
-      currencyCode: jsonData.code,
-    }));
-  } else {
-    return Promise.resolve([]);
-  }
+
+  return jsonData.rates.map((rate) => ({
+    date: rate.effectiveDate,
+    value: rate.mid,
+    currencyCode: jsonData.code,
+  }));
 };
