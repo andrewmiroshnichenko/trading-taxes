@@ -1,12 +1,4 @@
-interface GenericDataItem {
-  tradeDate: string;
-  currency: string;
-  activityType: string;
-  symbol: string;
-  quantity: string;
-  price: string;
-  amount: string;
-}
+import { GenericDataItem } from "../../types";
 
 const REVOLUT_ROW_PROPERTIES: (keyof GenericDataItem | null)[] = [
   "tradeDate",
