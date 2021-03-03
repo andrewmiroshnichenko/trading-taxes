@@ -31,7 +31,7 @@ export const mapRevolutCsvRowToGenericObject = (
 
 export const transformRevolutRow = (rowString: string): GenericDataItem =>
   rowString
-    .replace(/\\"/g, "")
+    .replace(/"/g, "")
     .split(",")
     .reduce(mapRevolutCsvRowToGenericObject, {} as GenericDataItem);
 
