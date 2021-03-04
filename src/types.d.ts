@@ -16,7 +16,12 @@ export interface GenericDataItem {
   currency: string;
   activityType: string;
   symbol: string;
-  quantity: string;
-  price: string;
-  amount: string;
+  quantity: number;
+  price: number;
+  amount: number;
+}
+
+export interface extendedGenericDataItemWIthPln extends GenericDataItem {
+  pricePln: number;
+  rate: number;
 }

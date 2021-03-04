@@ -14,15 +14,15 @@ const REVOLUT_ROW_PROPERTIES: (keyof GenericDataItem | null)[] = [
 ];
 const validActivityTypes = new Set(["SELL", "BUY", "DIV", "DIVNRA"]);
 
-// TODO export this interface
-
 export const mapRevolutCsvRowToGenericObject = (
   acc: GenericDataItem,
   item: string,
   index: number
 ): GenericDataItem => {
   const key = REVOLUT_ROW_PROPERTIES[index];
-  if (key !== null) {
+  if (key === "amount" || key === "price" || key === "quantity") {
+    acc[key] = parseFloat(item);
+  } else if (key !== null) {
     acc[key] = item;
   }
 
