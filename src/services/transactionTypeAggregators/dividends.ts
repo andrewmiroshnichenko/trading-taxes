@@ -15,7 +15,7 @@ export const getDividendsWithTotalSum = (
         return {
           ...acc,
           dividendRows: array,
-          [key]: acc[key] + item.pricePln,
+          [key]: acc[key] + item.amountPln,
         };
       },
       {
