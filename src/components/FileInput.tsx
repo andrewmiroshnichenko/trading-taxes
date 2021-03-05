@@ -26,7 +26,7 @@ export const FileInput: React.FunctionComponent = () => {
 
       const dividendsWithSum = getDividendsWithTotalSum(genericDataWithPlns);
 
-      console.log(genericData);
+      console.log(genericDataWithPlns);
     }
   };
   return <input type="file" onChange={onChange} />;

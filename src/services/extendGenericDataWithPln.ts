@@ -20,6 +20,11 @@ export const extendGenericDataWithPln = (
 ): ExtendedGenericDataItemWithPln[] =>
   genericData.map((item) => {
     const properRate = getRateForGivenDate(item.tradeDate, ratesMap);
-    const pricePln = parseFloat((properRate * item.price).toPrecision(2));
-    return { ...item, rate: properRate, pricePln };
+    const pricePln = parseFloat(
+      (parseInt((properRate * item.price * 100).toString()) / 100).toString()
+    );
+    const amountPln = parseFloat(
+      (parseInt((properRate * item.amount * 100).toString()) / 100).toString()
+    );
+    return { ...item, rate: properRate, pricePln, amountPln };
   });
