@@ -21,7 +21,14 @@ export interface GenericDataItem {
   amount: number;
 }
 
-export interface extendedGenericDataItemWIthPln extends GenericDataItem {
+export interface ExtendedGenericDataItemWithPln extends GenericDataItem {
   pricePln: number;
   rate: number;
+  amountPln: number;
+}
+
+export interface DividendsWithSum {
+  dividendRows: ExtendedGenericDataItemWithPln[];
+  totalDividendsPln: number;
+  totalTaxesPln: number;
 }
