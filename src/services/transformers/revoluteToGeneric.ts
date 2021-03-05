@@ -12,7 +12,12 @@ const REVOLUT_ROW_PROPERTIES: (keyof GenericDataItem | null)[] = [
   "price",
   "amount",
 ];
-const validActivityTypes = new Set(["SELL", "BUY", "DIV", "DIVNRA"]);
+export const revolutTransactionActivities = new Set(["SELL", "BUY"]);
+export const revolutDividendActivities = new Set(["DIV", "DIVNRA"]);
+const validActivityTypes = new Set([
+  ...revolutTransactionActivities,
+  ...revolutDividendActivities,
+]);
 
 export const mapRevolutCsvRowToGenericObject = (
   acc: GenericDataItem,

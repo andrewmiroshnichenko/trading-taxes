@@ -4,6 +4,7 @@ import { buildRatesMap } from "../services/buildRatesMap";
 import { extendGenericDataWithPln } from "../services/extendGenericDataWithPln";
 import { getFileContents } from "../services/fileParser";
 import { getTimeRange } from "../services/getTimeRange";
+import { getDividendsWithTotalSum } from "../services/transactionTypeAggregators/dividends";
 import { transformRevolutCsvToGeneric } from "../services/transformers/revoluteToGeneric";
 
 export const FileInput: React.FunctionComponent = () => {
@@ -23,7 +24,9 @@ export const FileInput: React.FunctionComponent = () => {
         ratesMap
       );
 
-      console.log(genericData, genericDataWithPlns);
+      const dividendsWithSum = getDividendsWithTotalSum(genericDataWithPlns);
+
+      console.log(genericData);
     }
   };
   return <input type="file" onChange={onChange} />;
