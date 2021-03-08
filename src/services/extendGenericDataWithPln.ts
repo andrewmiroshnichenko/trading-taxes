@@ -1,4 +1,4 @@
-import { ExtendedGenericDataItemWithPln, GenericDataItem } from "../types";
+import { DataItemWithPln, GenericDataItem } from "../types";
 import { subtractDaysAndFormatDate } from "./datetimeManipulations";
 
 // TODO use reselect here
@@ -17,7 +17,7 @@ const getRateForGivenDate = (
 export const extendGenericDataWithPln = (
   genericData: GenericDataItem[],
   ratesMap: Map<string, number>
-): ExtendedGenericDataItemWithPln[] =>
+): DataItemWithPln[] =>
   genericData.map((item) => {
     const properRate = getRateForGivenDate(item.tradeDate, ratesMap);
     const pricePln = parseFloat(
