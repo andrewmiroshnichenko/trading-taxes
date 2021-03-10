@@ -5,184 +5,58 @@ import {
 } from "../../types";
 import { revolutTransactionActivities } from "../transformers/revoluteToGeneric";
 
-interface TradeWithIndex extends DataItemWithPln {
-  indexInArray: number;
-}
-
 const getOtherActivity = (action: string): string => {
   const keys = Array.from(revolutTransactionActivities);
   return keys.find((value) => value !== action) as string;
 };
 
 export const getTradesWithTotalSum = (genericData: DataItemWithPln[]): any => {
-  const dealsMap = new Map() as Map<string, Record<string, TradeWithIndex[]>>;
+  const dealsMap = new Map() as Map<string, number[]>;
 
   const tradesFilteredAndSorted = genericData
     .filter((item) => revolutTransactionActivities.has(item.activityType))
     .sort((itemA, itemB) =>
       Date.parse(itemA.tradeDate) > Date.parse(itemB.tradeDate) ? 1 : -1
     )
-    .map((trade, index) => {
-      const newTrade = {
-        ...trade,
-        indexInArray: index,
-        quantity: Math.abs(trade.quantity),
-      };
-      if (!dealsMap.has(trade.symbol)) {
-        dealsMap.set(trade.symbol, {
-          [trade.activityType]: [newTrade],
-        });
-      } else {
-        const existingSymbolData = dealsMap.get(trade.symbol) as Record<
-          string,
-          TradeWithIndex[]
-        >;
-
-        existingSymbolData[trade.activityType] = (
-          existingSymbolData[trade.activityType] || []
-        ).concat(newTrade);
-      }
-
-      return newTrade;
-    })
     .map((trade) => {
-      const { activityType, symbol } = trade;
-      const otherActivityType = getOtherActivity(activityType);
-      const symbolData = dealsMap.get(symbol) as Record<
-        string,
-        TradeWithIndex[]
-      >;
-      const [boundTrade, ...nextBoundTrades] =
-        symbolData[otherActivityType] || [];
-      const [currentTrade, ...nextCurrentTrades] =
-        symbolData[activityType] || [];
-
-      if (!boundTrade) {
-        return currentTrade;
-      }
-      if (currentTrade.indexInArray < boundTrade.indexInArray) {
-        return {
-          ...trade,
-          correspondingTrades: [],
-        };
-      }
-      const dealProfitPln = calculateDealProfit(
-        currentTrade.quantity,
-        currentTrade.pricePln,
-        boundTrade.quantity,
-        boundTrade.pricePln
-      );
-
-      if (currentTrade.quantity === boundTrade.quantity) {
-        symbolData[otherActivityType] = nextBoundTrades;
-        symbolData[activityType] = nextCurrentTrades;
-        return {
-          ...currentTrade,
-          correspondingTrades: [boundTrade.indexInArray],
-          dealProfitPln,
-        };
+      if (!dealsMap.has(trade.symbol)) {
+        dealsMap.set(trade.symbol, []);
       }
 
-      if (currentTrade.quantity < boundTrade.quantity) {
-        symbolData[activityType] = nextCurrentTrades;
-        boundTrade.quantity = boundTrade.quantity - currentTrade.quantity;
+      const arrayOfSharePrices = dealsMap.get(trade.symbol) as number[];
+      const tradeSign = Math.sign(trade.quantity);
+      const arrayOfSharePricesLength = arrayOfSharePrices?.length;
 
-        return {
-          ...currentTrade,
-          correspondingTrades: [boundTrade.indexInArray],
-          dealProfitPln,
-        };
-      }
-
-      if (currentTrade.quantity > boundTrade.quantity) {
-        const { trade: summaryTrade, finalBoundArr } = sumAllBoundTrades({
-          trade: currentTrade,
-          finalBoundArr: symbolData[otherActivityType],
-        });
-
-        symbolData[otherActivityType] = finalBoundArr;
-        if (summaryTrade.quantity === 0) {
-          symbolData[activityType] = nextCurrentTrades;
+      if (
+        arrayOfSharePricesLength === 0 ||
+        arrayOfSharePrices[0] * trade.quantity > 0
+      ) {
+        const currentArrayOfSharePrices = arrayOfSharePrices.length;
+        for (let i = 0; i < tradeSign * trade.quantity; i++) {
+          arrayOfSharePrices[currentArrayOfSharePrices + i] =
+            trade.pricePln * tradeSign;
         }
+        return trade;
+      } else {
+        let dealProfitPln = 0;
+        const remainedNumberOfTradeShares =
+          tradeSign * trade.quantity - arrayOfSharePricesLength;
 
-        return {
-          ...currentTrade,
-          correspondingTrades: summaryTrade.correspondingTrades,
-          dealProfitPln: summaryTrade.dealProfitPln,
-        };
+        const lowestLength =
+          remainedNumberOfTradeShares <= 0
+            ? tradeSign * trade.quantity
+            : arrayOfSharePricesLength;
+
+        for (let i = 0; i < lowestLength; i++) {
+          dealProfitPln +=
+            trade.pricePln * tradeSign + (arrayOfSharePrices.shift() as number);
+        }
+        for (let i = 0; i < remainedNumberOfTradeShares; i++) {
+          arrayOfSharePrices[i] = trade.pricePln * tradeSign;
+        }
+        return { ...trade, dealProfitPln, numberOfMatchedShares: lowestLength };
       }
     });
 
   return tradesFilteredAndSorted;
 };
-function sumAllBoundTrades({
-  finalBoundArr,
-  trade,
-}: {
-  trade: TradeWithProfitAndCrossLinks;
-  finalBoundArr: TradeWithIndex[];
-}): {
-  trade: TradeWithProfitAndCrossLinks;
-  finalBoundArr: TradeWithIndex[];
-} {
-  const [currentBound, ...otherBound] = finalBoundArr;
-
-  if (currentBound.quantity < trade.quantity) {
-    trade.quantity = trade.quantity - currentBound.quantity;
-    return sumAllBoundTrades({
-      finalBoundArr: otherBound,
-      trade: {
-        ...trade,
-        correspondingTrades: [
-          ...(trade.correspondingTrades || []),
-          currentBound.indexInArray,
-        ],
-        dealProfitPln: calculateDealProfit(
-          currentBound.quantity,
-          trade.pricePln,
-          currentBound.quantity,
-          currentBound.pricePln,
-          trade.dealProfitPln
-        ),
-      },
-    });
-  } else {
-    const isTradeSmallerThanBound = currentBound.quantity > trade.quantity;
-    if (isTradeSmallerThanBound) {
-      currentBound.quantity = currentBound.quantity - trade.quantity;
-    } else {
-      currentBound.quantity = 0;
-    }
-    return {
-      finalBoundArr: isTradeSmallerThanBound ? finalBoundArr : otherBound,
-      trade: {
-        ...trade,
-        correspondingTrades: [
-          ...(trade.correspondingTrades || []),
-          currentBound.indexInArray,
-        ],
-        dealProfitPln: calculateDealProfit(
-          trade.quantity,
-          trade.pricePln,
-          trade.quantity,
-          currentBound.pricePln,
-          trade.dealProfitPln
-        ),
-      },
-    };
-  }
-}
-
-function calculateDealProfit(
-  tradeQuantity: number,
-  tradePrice: number,
-  boundTradeQuantity: number,
-  boundTradePrice: number,
-  prevProfit = 0
-): number {
-  return (
-    prevProfit +
-    tradePrice * tradeQuantity -
-    boundTradePrice * boundTradeQuantity
-  );
-}
