@@ -1,19 +1,21 @@
 import {
   DataItemWithPln,
   TradesWithTotalSum,
-  TradeWithProfitAndCrossLinks,
+  TradeWithProfit,
 } from "../../types";
 import { revolutTransactionActivities } from "../transformers/revoluteToGeneric";
 
-const getOtherActivity = (action: string): string => {
-  const keys = Array.from(revolutTransactionActivities);
-  return keys.find((value) => value !== action) as string;
-};
+// Because of inverted BUY/SELL prices (which means that on BUY operation we have pricePln +10, on SELL it can be -15,
+// and total will result in -5, but in fact this deal is closed with profit of 5) we need to invert sign of computed amount
+const PROFIT_SIGN_INVERSION = -1;
 
-export const getTradesWithTotalSum = (genericData: DataItemWithPln[]): any => {
+export const getTradesWithTotalSum = (
+  genericData: DataItemWithPln[]
+): TradesWithTotalSum => {
   const dealsMap = new Map() as Map<string, number[]>;
+  let totalTradesProfitPln = 0;
 
-  const tradesFilteredAndSorted = genericData
+  const tradesFilteredAndSorted: TradeWithProfit[] = genericData
     .filter((item) => revolutTransactionActivities.has(item.activityType))
     .sort((itemA, itemB) =>
       Date.parse(itemA.tradeDate) > Date.parse(itemB.tradeDate) ? 1 : -1
@@ -49,14 +51,17 @@ export const getTradesWithTotalSum = (genericData: DataItemWithPln[]): any => {
 
         for (let i = 0; i < lowestLength; i++) {
           dealProfitPln +=
-            trade.pricePln * tradeSign + (arrayOfSharePrices.shift() as number);
+            (trade.pricePln * tradeSign +
+              (arrayOfSharePrices.shift() as number)) *
+            PROFIT_SIGN_INVERSION;
         }
         for (let i = 0; i < remainedNumberOfTradeShares; i++) {
           arrayOfSharePrices[i] = trade.pricePln * tradeSign;
         }
+        totalTradesProfitPln += dealProfitPln;
         return { ...trade, dealProfitPln, numberOfMatchedShares: lowestLength };
       }
     });
 
-  return tradesFilteredAndSorted;
+  return { tradesRows: tradesFilteredAndSorted, totalTradesProfitPln };
 };

@@ -33,12 +33,11 @@ export interface DividendsWithSum {
   totalTaxesPln: number;
 }
 
-export interface TradeWithProfitAndCrossLinks extends DataItemWithPln {
-  correspondingTrades?: number[];
+export interface TradeWithProfit extends DataItemWithPln {
   dealProfitPln?: number;
 }
 
 export interface TradesWithTotalSum {
-  tradesRows: TradeWithProfitAndCrossLinks[];
+  tradesRows: TradeWithProfit[];
   totalTradesProfitPln: number;
 }

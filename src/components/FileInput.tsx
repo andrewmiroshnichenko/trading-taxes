@@ -26,9 +26,7 @@ export const FileInput: React.FunctionComponent = () => {
       );
 
       const dividendsWithSum = getDividendsWithTotalSum(genericDataWithPlns);
-      const tradesWithSum = getTradesWithTotalSum(
-        genericDataWithPlns
-      ) as unknown;
+      const tradesWithSum = getTradesWithTotalSum(genericDataWithPlns);
 
       console.log(genericDataWithPlns, tradesWithSum);
     }
