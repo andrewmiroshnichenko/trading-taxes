@@ -5,6 +5,7 @@ import { extendGenericDataWithPln } from "../services/extendGenericDataWithPln";
 import { getFileContents } from "../services/fileParser";
 import { getTimeRange } from "../services/getTimeRange";
 import { getDividendsWithTotalSum } from "../services/transactionTypeAggregators/dividends";
+import { getTradesWithTotalSum } from "../services/transactionTypeAggregators/trades";
 import { transformRevolutCsvToGeneric } from "../services/transformers/revoluteToGeneric";
 
 export const FileInput: React.FunctionComponent = () => {
@@ -25,8 +26,9 @@ export const FileInput: React.FunctionComponent = () => {
       );
 
       const dividendsWithSum = getDividendsWithTotalSum(genericDataWithPlns);
+      const tradesWithSum = getTradesWithTotalSum(genericDataWithPlns);
 
-      console.log(genericDataWithPlns);
+      console.log(genericDataWithPlns, tradesWithSum);
     }
   };
   return <input type="file" onChange={onChange} />;

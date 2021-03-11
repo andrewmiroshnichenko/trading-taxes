@@ -1,8 +1,8 @@
-import { DividendsWithSum, ExtendedGenericDataItemWithPln } from "../../types";
+import { DividendsWithSum, DataItemWithPln } from "../../types";
 import { revolutDividendActivities } from "../transformers/revoluteToGeneric";
 
 export const getDividendsWithTotalSum = (
-  allData: ExtendedGenericDataItemWithPln[]
+  allData: DataItemWithPln[]
 ): DividendsWithSum =>
   allData
     .filter((item) => revolutDividendActivities.has(item.activityType))
