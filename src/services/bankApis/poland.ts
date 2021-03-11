@@ -2,7 +2,7 @@ import { isNpbResponse } from "../../typeGuards";
 import { Rate } from "../../types";
 
 // http://api.nbp.pl/
-const API_STRING = "http://api.nbp.pl/api/exchangerates/rates";
+const API_STRING = "https://api.nbp.pl/api/exchangerates/rates";
 
 interface RateQueryParameters {
   startDate: string;
