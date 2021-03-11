@@ -7,8 +7,13 @@ import { getTimeRange } from "../services/getTimeRange";
 import { getDividendsWithTotalSum } from "../services/transactionTypeAggregators/dividends";
 import { getTradesWithTotalSum } from "../services/transactionTypeAggregators/trades";
 import { transformRevolutCsvToGeneric } from "../services/transformers/revoluteToGeneric";
+import { ContextInterface } from "../types";
 
-export const FileInput: React.FunctionComponent = () => {
+interface Props {
+  onInput: (context: ContextInterface) => void;
+}
+
+export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
   const onChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ): Promise<void> => {
@@ -28,8 +33,12 @@ export const FileInput: React.FunctionComponent = () => {
       const dividendsWithSum = getDividendsWithTotalSum(genericDataWithPlns);
       const tradesWithSum = getTradesWithTotalSum(genericDataWithPlns);
 
-      console.log(genericDataWithPlns, tradesWithSum);
+      onInput({ dividends: dividendsWithSum, trades: tradesWithSum });
     }
   };
   return <input type="file" onChange={onChange} />;
+};
+
+FileInput.propTypes = {
+  onInput: () => null,
 };
