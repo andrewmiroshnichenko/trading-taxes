@@ -51,3 +51,8 @@ export interface ITimeRange {
   endDate: string;
   startDate: string;
 }
+
+interface IGenericParseResult {
+  items: GenericDataItem[];
+  excludedOperations: string[];
+}

@@ -1,4 +1,4 @@
-import { GenericDataItem } from "../../types";
+import { GenericDataItem, IGenericParseResult } from "../../types";
 
 const REVOLUT_ROW_PROPERTIES: (keyof GenericDataItem | null)[] = [
   "tradeDate",
@@ -40,10 +40,24 @@ export const transformRevolutRow = (rowString: string): GenericDataItem =>
     .split(",")
     .reduce(mapRevolutCsvRowToGenericObject, {} as GenericDataItem);
 
-export const transformRevolutCsvToGeneric = (text: string): GenericDataItem[] =>
-  text
+export const transformRevolutCsvToGeneric = (
+  text: string
+): IGenericParseResult => {
+  const allActivities = new Set<string>();
+
+  const items = text
     .split("\n")
     .map(transformRevolutRow)
-    .filter(
-      (v, index) => index !== 0 && validActivityTypes.has(v.activityType)
-    );
+    .filter((v, index) => {
+      if (index !== 0) {
+        allActivities.add(v.activityType);
+      }
+      return index !== 0 && validActivityTypes.has(v.activityType);
+    });
+
+  const excludedOperations = [...allActivities].filter(
+    (activity) => !validActivityTypes.has(activity)
+  );
+
+  return { excludedOperations, items };
+};

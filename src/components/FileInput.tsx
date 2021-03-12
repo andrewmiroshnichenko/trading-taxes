@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { geUsdRatesForDatesRangeInJson } from "../services/bankApis/poland";
 import { buildRatesMap } from "../services/buildRatesMap";
 import { extendGenericDataWithPln } from "../services/extendGenericDataWithPln";
@@ -20,6 +20,7 @@ interface Props {
 }
 
 export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
+  const [excludedOperations, setExcludedOperations] = useState<string[]>([]);
   const onChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ): Promise<void> => {
@@ -27,18 +28,15 @@ export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
 
     if (file) {
       const text = await getFileContents(file);
-      const genericData = transformRevolutCsvToGeneric(text);
-      const { endDate, startDate } = getTimeRange(genericData);
+      const { items, excludedOperations } = transformRevolutCsvToGeneric(text);
+      const { endDate, startDate } = getTimeRange(items);
       const yearLongTimeRanges = splitTimeRangeIfNecessary({
         endDate,
         startDate,
       });
       const rates = await geUsdRatesForDatesRangeInJson(yearLongTimeRanges);
       const ratesMap = buildRatesMap(rates);
-      const genericDataWithPlns = extendGenericDataWithPln(
-        genericData,
-        ratesMap
-      );
+      const genericDataWithPlns = extendGenericDataWithPln(items, ratesMap);
 
       const dividendsWithSum = getDividendsWithTotalSum(genericDataWithPlns);
       const tradesWithSum = getTradesWithTotalSum(genericDataWithPlns);
@@ -49,7 +47,15 @@ export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
         dividends,
         trades,
       });
+      setExcludedOperations(excludedOperations);
     }
   };
-  return <input type="file" onChange={onChange} />;
+  return (
+    <>
+      <input type="file" onChange={onChange} />
+      {excludedOperations.length ? (
+        <p>Excluded operations: {excludedOperations.join(", ")}</p>
+      ) : null}
+    </>
+  );
 };
