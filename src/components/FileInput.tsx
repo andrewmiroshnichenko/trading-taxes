@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { geUsdRatesForDatesRangeInJson } from "../services/bankApis/poland";
 import { buildRatesMap } from "../services/buildRatesMap";
 import { extendGenericDataWithPln } from "../services/extendGenericDataWithPln";
@@ -20,6 +20,7 @@ interface Props {
 }
 
 export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
+  const [excludedOperations, setExcludedOperations] = useState<string[]>([]);
   const onChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ): Promise<void> => {
@@ -46,11 +47,15 @@ export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
         dividends,
         trades,
       });
+      setExcludedOperations(excludedOperations);
     }
   };
   return (
     <>
       <input type="file" onChange={onChange} />
+      {excludedOperations.length ? (
+        <p>Excluded operations: {excludedOperations.join(", ")}</p>
+      ) : null}
     </>
   );
 };

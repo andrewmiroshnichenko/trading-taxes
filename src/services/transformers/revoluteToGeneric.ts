@@ -49,6 +49,9 @@ export const transformRevolutCsvToGeneric = (
     .split("\n")
     .map(transformRevolutRow)
     .filter((v, index) => {
+      if (index !== 0) {
+        allActivities.add(v.activityType);
+      }
       return index !== 0 && validActivityTypes.has(v.activityType);
     });
 
