@@ -44,6 +44,8 @@ export const getTimeRange = (
   };
 };
 
+// NBP has limitation of 367 date range, when querying rates
+// Here we're splitting time range, derived from user's file, to have 1-year ranges
 export const splitTimeRangeIfNecessary = ({
   endDate,
   startDate,
@@ -61,10 +63,6 @@ export const splitTimeRangeIfNecessary = ({
     });
     tempEndDate = yearAgoDate;
   } while (originalStartDate < tempEndDate);
-  return [
-    {
-      endDate,
-      startDate,
-    },
-  ];
+
+  return ranges;
 };

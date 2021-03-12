@@ -33,7 +33,7 @@ export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
         endDate,
         startDate,
       });
-      const rates = await geUsdRatesForDatesRangeInJson(yearLongTimeRanges); // TODO test this on a time range > 1year (400 will be returned by NBP API)
+      const rates = await geUsdRatesForDatesRangeInJson(yearLongTimeRanges);
       const ratesMap = buildRatesMap(rates);
       const genericDataWithPlns = extendGenericDataWithPln(
         genericData,

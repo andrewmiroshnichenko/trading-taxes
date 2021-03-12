@@ -1,29 +1,45 @@
 import { isNpbResponse } from "../../typeGuards";
-import { Rate } from "../../types";
+import { ITimeRange, NbpResponse, Rate } from "../../types";
 
 // http://api.nbp.pl/
 const API_STRING = "https://api.nbp.pl/api/exchangerates/rates";
 
-interface RateQueryParameters {
-  startDate: string;
-  endDate: string;
-}
-
-export const geUsdRatesForDatesRangeInJson = async ({
-  startDate,
-  endDate,
-}: RateQueryParameters): Promise<Rate[]> => {
-  const data = await fetch(
-    `${API_STRING}/a/usd/${startDate}/${endDate}/?format=json`
+export const geUsdRatesForDatesRangeInJson = async (
+  ranges: ITimeRange[]
+): Promise<Rate[]> => {
+  console.log(ranges);
+  const queryPromises = ranges.map(({ startDate, endDate }) =>
+    fetch(`${API_STRING}/a/usd/${startDate}/${endDate}/?format=json`)
   );
+  const queryData = (await Promise.all(queryPromises)).map((promise) =>
+    promise.json()
+  );
+  const rawRateRanges = await Promise.all(queryData);
 
-  const jsonData = await data.json().then((response) => {
-    if (isNpbResponse(response)) {
-      return response;
-    } else {
-      throw new Error("NBP response format changed dramatically ");
-    }
-  });
+  const jsonData = rawRateRanges
+    // Type guard
+    .map((rateRange) => {
+      if (isNpbResponse(rateRange)) {
+        return rateRange;
+      } else {
+        throw new Error("NBP response format changed dramatically ");
+      }
+    })
+    .reduce((acc, range) => {
+      if (!range) {
+        return acc;
+      }
+
+      // We need to assign this property in first iteration
+      if (typeof acc.rates === "undefined") {
+        acc.rates = [];
+      }
+
+      acc.code = range.code; // TODO this isn't very smart
+      acc.rates.concat(range.rates);
+
+      return acc;
+    }, {} as NbpResponse);
 
   return jsonData.rates.map((rate) => ({
     date: rate.effectiveDate,
