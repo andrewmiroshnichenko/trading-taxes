@@ -1,6 +1,41 @@
 import { DividendsWithSum, DataItemWithPln } from "../../types";
 import { revolutDividendActivities } from "../transformers/revoluteToGeneric";
 
+const DIVIDEND_CSV_HEADER = [
+  "Date",
+  "Symbol",
+  "Operation",
+  "Sum",
+  "Rate",
+  "Sum PLN",
+  "Currency",
+];
+
+export const prepareDividendToCsv = (dividends: DataItemWithPln[]): string =>
+  [DIVIDEND_CSV_HEADER]
+    .concat(
+      dividends.map(
+        ({
+          tradeDate,
+          symbol,
+          activityType,
+          amount,
+          rate,
+          amountPln,
+          currency,
+        }) => [
+          tradeDate,
+          symbol,
+          activityType,
+          amount.toString(),
+          rate.toString(),
+          amountPln.toString(),
+          currency,
+        ]
+      )
+    )
+    .join("\n");
+
 export const getDividendsWithTotalSum = (
   allData: DataItemWithPln[]
 ): DividendsWithSum =>

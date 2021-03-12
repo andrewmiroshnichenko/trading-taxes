@@ -1,18 +1,12 @@
 import React, { useCallback, useState } from "react";
+import { DownloadLink } from "./components/DownloadLink";
 import { FileInput } from "./components/FileInput";
 import { ContextInterface } from "./types";
 const context: ContextInterface = {
-  dividends: {
-    dividendRows: [],
-    totalDividendsPln: 0,
-    totalTaxesPln: 0,
-  },
-  trades: {
-    tradesRows: [],
-    totalTradesProfitPln: 0,
-  },
+  dividends: "",
+  trades: "",
 };
-const DataContext = React.createContext(context);
+export const DataContext = React.createContext(context);
 
 function App(): JSX.Element {
   const [contextState, setContextState] = useState(context);
@@ -26,8 +20,16 @@ function App(): JSX.Element {
   return (
     <DataContext.Provider value={contextState}>
       <FileInput onInput={updateContext} />
-      <a download>Download dividends CSV</a>
-      <a download>Download trades CSV</a>
+      <DownloadLink
+        fileName="Dividends.csv"
+        contextProp="dividends"
+        text="Download dividends CSV"
+      />
+      <DownloadLink
+        fileName="trades.csv"
+        contextProp="trades"
+        text="Download trades CSV"
+      />
     </DataContext.Provider>
   );
 }

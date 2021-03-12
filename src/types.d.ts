@@ -43,6 +43,6 @@ export interface TradesWithTotalSum {
 }
 
 export interface ContextInterface {
-  trades: TradesWithTotalSum;
-  dividends: DividendsWithSum;
+  trades: string;
+  dividends: string;
 }
