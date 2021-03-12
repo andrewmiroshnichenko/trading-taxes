@@ -46,6 +46,8 @@ export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
       onInput({
         dividends,
         trades,
+        tradesTotal: tradesWithSum.totalTradesProfitPln,
+        dividendsTotal: dividendsWithSum.totalDividendsPln,
       });
       setExcludedOperations(excludedOperations);
     }

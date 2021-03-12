@@ -45,6 +45,8 @@ export interface TradesWithTotalSum {
 export interface ContextInterface {
   trades: string;
   dividends: string;
+  dividendsTotal: number;
+  tradesTotal: number;
 }
 
 export interface ITimeRange {
