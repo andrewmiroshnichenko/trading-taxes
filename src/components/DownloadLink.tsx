@@ -19,8 +19,10 @@ export const DownloadLink: React.FunctionComponent<Props> = ({
     })
   );
   return content ? (
-    <a download={fileName} href={href}>
-      {text}
-    </a>
+    <div>
+      <a download={fileName} href={href}>
+        {text}
+      </a>
+    </div>
   ) : null;
 };

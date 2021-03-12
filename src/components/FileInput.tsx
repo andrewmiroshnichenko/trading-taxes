@@ -52,7 +52,12 @@ export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
   };
   return (
     <>
-      <input type="file" onChange={onChange} />
+      <label htmlFor="main-file-input">
+        Drop file, or chose one by clicking here
+      </label>
+      <div>
+        <input type="file" id="main-file-input" onChange={onChange} />
+      </div>
       {excludedOperations.length ? (
         <p>Excluded operations: {excludedOperations.join(", ")}</p>
       ) : null}
