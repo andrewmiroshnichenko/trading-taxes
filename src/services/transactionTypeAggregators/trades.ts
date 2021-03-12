@@ -8,6 +8,45 @@ import { revolutTransactionActivities } from "../transformers/revoluteToGeneric"
 // Because of inverted BUY/SELL prices (which means that on BUY operation we have pricePln +10, on SELL it can be -15,
 // and total will result in -5, but in fact this deal is closed with profit of 5) we need to invert sign of computed amount
 const PROFIT_SIGN_INVERSION = -1;
+const TRADE_CSV_HEADER = [
+  "Date",
+  "Symbol",
+  "Operation",
+  "Quantity",
+  "Price",
+  "Rate",
+  "Price PLN",
+  "Currency",
+  "Deal profit",
+];
+export const prepareTradesToCsv = (trades: TradeWithProfit[]): string =>
+  [TRADE_CSV_HEADER]
+    .concat(
+      trades.map(
+        ({
+          tradeDate,
+          symbol,
+          activityType,
+          quantity,
+          price,
+          rate,
+          pricePln,
+          currency,
+          dealProfitPln = 0,
+        }) => [
+          tradeDate,
+          symbol,
+          activityType,
+          quantity.toString(),
+          price.toString(),
+          rate.toString(),
+          pricePln.toString(),
+          currency,
+          dealProfitPln.toString(),
+        ]
+      )
+    )
+    .join("\n");
 
 export const getTradesWithTotalSum = (
   genericData: DataItemWithPln[]

@@ -41,3 +41,8 @@ export interface TradesWithTotalSum {
   tradesRows: TradeWithProfit[];
   totalTradesProfitPln: number;
 }
+
+export interface ContextInterface {
+  trades: string;
+  dividends: string;
+}

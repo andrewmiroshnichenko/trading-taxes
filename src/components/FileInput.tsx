@@ -4,11 +4,22 @@ import { buildRatesMap } from "../services/buildRatesMap";
 import { extendGenericDataWithPln } from "../services/extendGenericDataWithPln";
 import { getFileContents } from "../services/fileParser";
 import { getTimeRange } from "../services/getTimeRange";
-import { getDividendsWithTotalSum } from "../services/transactionTypeAggregators/dividends";
-import { getTradesWithTotalSum } from "../services/transactionTypeAggregators/trades";
+import {
+  getDividendsWithTotalSum,
+  prepareDividendToCsv,
+} from "../services/transactionTypeAggregators/dividends";
+import {
+  getTradesWithTotalSum,
+  prepareTradesToCsv,
+} from "../services/transactionTypeAggregators/trades";
 import { transformRevolutCsvToGeneric } from "../services/transformers/revoluteToGeneric";
+import { ContextInterface } from "../types";
 
-export const FileInput: React.FunctionComponent = () => {
+interface Props {
+  onInput: (context: ContextInterface) => void;
+}
+
+export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
   const onChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ): Promise<void> => {
@@ -27,8 +38,13 @@ export const FileInput: React.FunctionComponent = () => {
 
       const dividendsWithSum = getDividendsWithTotalSum(genericDataWithPlns);
       const tradesWithSum = getTradesWithTotalSum(genericDataWithPlns);
+      const dividends = prepareDividendToCsv(dividendsWithSum.dividendRows);
+      const trades = prepareTradesToCsv(tradesWithSum.tradesRows);
 
-      console.log(genericDataWithPlns, tradesWithSum);
+      onInput({
+        dividends,
+        trades,
+      });
     }
   };
   return <input type="file" onChange={onChange} />;
