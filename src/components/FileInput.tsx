@@ -49,7 +49,3 @@ export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
   };
   return <input type="file" onChange={onChange} />;
 };
-
-FileInput.propTypes = {
-  onInput: () => null,
-};

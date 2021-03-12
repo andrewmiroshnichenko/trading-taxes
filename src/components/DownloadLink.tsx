@@ -24,9 +24,3 @@ export const DownloadLink: React.FunctionComponent<Props> = ({
     </a>
   ) : null;
 };
-
-DownloadLink.propTypes = {
-  text: undefined,
-  fileName: undefined,
-  contextProp: undefined,
-};
