@@ -7,7 +7,6 @@ const API_STRING = "https://api.nbp.pl/api/exchangerates/rates";
 export const geUsdRatesForDatesRangeInJson = async (
   ranges: ITimeRange[]
 ): Promise<Rate[]> => {
-  console.log(ranges);
   const queryPromises = ranges.map(({ startDate, endDate }) =>
     fetch(`${API_STRING}/a/usd/${startDate}/${endDate}/?format=json`)
   );
@@ -30,13 +29,8 @@ export const geUsdRatesForDatesRangeInJson = async (
         return acc;
       }
 
-      // We need to assign this property in first iteration
-      if (typeof acc.rates === "undefined") {
-        acc.rates = [];
-      }
-
       acc.code = range.code; // TODO this isn't very smart
-      acc.rates.concat(range.rates);
+      acc.rates = (acc.rates || []).concat(range.rates);
 
       return acc;
     }, {} as NbpResponse);

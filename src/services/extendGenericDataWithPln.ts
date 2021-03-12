@@ -6,7 +6,7 @@ const getRateForGivenDate = (
   date: string,
   ratesMap: Map<string, number>
 ): number => {
-  // According to the Polish laws, rate "need to be taken from the previous working day"
+  // According to the Polish laws, rate "need to be taken from the previous bank day"
   const prevDate = subtractDaysAndFormatDate(Date.parse(date), 1);
   if (ratesMap.has(prevDate)) {
     return ratesMap.get(prevDate) as number;
