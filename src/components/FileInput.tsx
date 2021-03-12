@@ -27,18 +27,15 @@ export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
 
     if (file) {
       const text = await getFileContents(file);
-      const genericData = transformRevolutCsvToGeneric(text);
-      const { endDate, startDate } = getTimeRange(genericData);
+      const { items, excludedOperations } = transformRevolutCsvToGeneric(text);
+      const { endDate, startDate } = getTimeRange(items);
       const yearLongTimeRanges = splitTimeRangeIfNecessary({
         endDate,
         startDate,
       });
       const rates = await geUsdRatesForDatesRangeInJson(yearLongTimeRanges);
       const ratesMap = buildRatesMap(rates);
-      const genericDataWithPlns = extendGenericDataWithPln(
-        genericData,
-        ratesMap
-      );
+      const genericDataWithPlns = extendGenericDataWithPln(items, ratesMap);
 
       const dividendsWithSum = getDividendsWithTotalSum(genericDataWithPlns);
       const tradesWithSum = getTradesWithTotalSum(genericDataWithPlns);
@@ -51,5 +48,9 @@ export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
       });
     }
   };
-  return <input type="file" onChange={onChange} />;
+  return (
+    <>
+      <input type="file" onChange={onChange} />
+    </>
+  );
 };
