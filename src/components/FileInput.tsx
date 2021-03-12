@@ -3,7 +3,7 @@ import { geUsdRatesForDatesRangeInJson } from "../services/bankApis/poland";
 import { buildRatesMap } from "../services/buildRatesMap";
 import { extendGenericDataWithPln } from "../services/extendGenericDataWithPln";
 import { getFileContents } from "../services/fileParser";
-import { getTimeRange } from "../services/getTimeRange";
+import { getTimeRange, splitTimeRangeIfNecessary } from "../services/time";
 import {
   getDividendsWithTotalSum,
   prepareDividendToCsv,
@@ -29,7 +29,11 @@ export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
       const text = await getFileContents(file);
       const genericData = transformRevolutCsvToGeneric(text);
       const { endDate, startDate } = getTimeRange(genericData);
-      const rates = await geUsdRatesForDatesRangeInJson({ endDate, startDate }); // TODO test this on a time range > 1year (400 will be returned by NBP API)
+      const yearLongTimeRanges = splitTimeRangeIfNecessary({
+        endDate,
+        startDate,
+      });
+      const rates = await geUsdRatesForDatesRangeInJson(yearLongTimeRanges); // TODO test this on a time range > 1year (400 will be returned by NBP API)
       const ratesMap = buildRatesMap(rates);
       const genericDataWithPlns = extendGenericDataWithPln(
         genericData,

@@ -1,7 +1,8 @@
-import { GenericDataItem } from "../types";
+import { GenericDataItem, ITimeRange } from "../types";
 import {
   formatToGeneralDate,
   subtractDaysAndFormatDate,
+  subtractYear,
 } from "./datetimeManipulations";
 
 // We want to shift start date back for few days.
@@ -11,7 +12,7 @@ const SAFE_TIME_RANGE = 5;
 
 export const getTimeRange = (
   tradeEntries = [] as GenericDataItem[]
-): { endDate: string; startDate: string } => {
+): ITimeRange => {
   const freshMap = new Map([
     ["startDate", Date.now()],
     ["endDate", 0],
@@ -41,4 +42,29 @@ export const getTimeRange = (
     endDate,
     startDate,
   };
+};
+
+export const splitTimeRangeIfNecessary = ({
+  endDate,
+  startDate,
+}: ITimeRange): ITimeRange[] => {
+  const ranges = [];
+  const originalStartDate = Date.parse(startDate);
+  let tempEndDate = Date.parse(endDate);
+  do {
+    const yearAgoDate = subtractYear(tempEndDate);
+    const isBigEnoughRange = originalStartDate < yearAgoDate;
+    const tempStartDate = isBigEnoughRange ? yearAgoDate : originalStartDate;
+    ranges.push({
+      endDate: formatToGeneralDate(tempEndDate),
+      startDate: formatToGeneralDate(tempStartDate),
+    });
+    tempEndDate = yearAgoDate;
+  } while (originalStartDate < tempEndDate);
+  return [
+    {
+      endDate,
+      startDate,
+    },
+  ];
 };
