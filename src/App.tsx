@@ -13,7 +13,6 @@ function App(): JSX.Element {
   const updateContext = useCallback(
     (newContext: ContextInterface) => {
       setContextState(newContext);
-      console.log("newContext", newContext);
     },
     [setContextState]
   );

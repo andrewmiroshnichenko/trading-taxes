@@ -46,3 +46,8 @@ export interface ContextInterface {
   trades: string;
   dividends: string;
 }
+
+export interface ITimeRange {
+  endDate: string;
+  startDate: string;
+}
