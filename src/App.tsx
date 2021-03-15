@@ -24,7 +24,7 @@ function App(): JSX.Element {
       <div>
         <p>Total dividends: {contextState.dividendsTotal}</p>
         <DownloadLink
-          fileName="Dividends.csv"
+          fileName="dividends.csv"
           contextProp="dividends"
           text="Download dividends CSV"
         />
