@@ -48,7 +48,7 @@ export interface ContextInterface {
   dividendsTotal: number;
   tradesTotal: number;
 }
-
+export type IDataStore = ContextInterface;
 export interface ITimeRange {
   endDate: string;
   startDate: string;

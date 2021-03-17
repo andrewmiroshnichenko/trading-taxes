@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { IFileInputContainer } from "../containers/FileInputContainer";
 import { geUsdRatesForDatesRangeInJson } from "../services/bankApis/poland";
 import { buildRatesMap } from "../services/buildRatesMap";
 import { extendGenericDataWithPln } from "../services/extendGenericDataWithPln";
@@ -13,13 +14,12 @@ import {
   prepareTradesToCsv,
 } from "../services/transactionTypeAggregators/trades";
 import { transformRevolutCsvToGeneric } from "../services/transformers/revoluteToGeneric";
-import { ContextInterface } from "../types";
 
-interface Props {
-  onInput: (context: ContextInterface) => void;
-}
+type Props = IFileInputContainer;
 
-export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
+export const FileInput: React.FunctionComponent<Props> = ({
+  updateDataStore,
+}) => {
   const [excludedOperations, setExcludedOperations] = useState<string[]>([]);
   const onChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -43,7 +43,7 @@ export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
       const dividends = prepareDividendToCsv(dividendsWithSum.dividendRows);
       const trades = prepareTradesToCsv(tradesWithSum.tradesRows);
 
-      onInput({
+      updateDataStore({
         dividends,
         trades,
         tradesTotal: tradesWithSum.totalTradesProfitPln,
@@ -52,6 +52,7 @@ export const FileInput: React.FunctionComponent<Props> = ({ onInput }) => {
       setExcludedOperations(excludedOperations);
     }
   };
+
   return (
     <>
       <label htmlFor="main-file-input">
