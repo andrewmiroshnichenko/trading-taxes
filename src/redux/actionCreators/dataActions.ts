@@ -1,7 +1,7 @@
 import { IDataStore } from "../../types";
 import { UPDATE_DATA_STORE } from "../actionTypes";
 
-interface IUpdateDataAction {
+export interface IUpdateDataAction {
   type: typeof UPDATE_DATA_STORE;
   payload: IDataStore;
 }

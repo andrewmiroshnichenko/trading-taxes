@@ -1,24 +1,22 @@
 import React, { useContext } from "react";
-import { DataContext } from "../App";
 
 interface Props {
   text: string;
   fileName: string;
-  contextProp: "trades" | "dividends";
+  dataset: string;
 }
 
 export const DownloadLink: React.FunctionComponent<Props> = ({
   text,
   fileName,
-  contextProp,
+  dataset,
 }) => {
-  const content = useContext(DataContext)[contextProp];
   const href = URL.createObjectURL(
-    new Blob([content], {
+    new Blob([dataset], {
       type: "text/csv",
     })
   );
-  return content ? (
+  return dataset ? (
     <a download={fileName} href={href}>
       {text}
     </a>
