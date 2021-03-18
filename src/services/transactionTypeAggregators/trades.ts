@@ -2,7 +2,7 @@ import {
   DataItemWithPln,
   TradesWithTotalSum,
   TradeWithProfit,
-} from "../../types";
+} from "../../types/types";
 import { revolutTransactionActivities } from "../transformers/revoluteToGeneric";
 
 // Because of inverted BUY/SELL prices (which means that on BUY operation we have pricePln +10, on SELL it can be -15,

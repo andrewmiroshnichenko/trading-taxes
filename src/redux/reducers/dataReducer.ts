@@ -1,5 +1,4 @@
-import { IDataStore } from "../../types";
-import { IUpdateDataAction } from "../actionCreators/dataActions";
+import { IDataStore, IUpdateDataAction } from "../../types/redux";
 import { UPDATE_DATA_STORE } from "../actionTypes";
 
 const defaultState: IDataStore = {

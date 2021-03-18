@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any */
 
-import { NbpResponse } from "./types";
+import { NbpResponse } from "./types/types";
 
 const supportedCurrencies = ["USD"];
 

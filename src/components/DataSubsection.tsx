@@ -1,20 +1,26 @@
 import React from "react";
-import { IDataSubsectionContainer } from "../containers/DataSubsectionContainer";
+import {
+  IDataSubsectionContainer,
+  ISubsectionOwnProps,
+} from "../containers/DataSubsectionContainer";
 import { DownloadLink } from "./DownloadLink";
 
-type Props = IDataSubsectionContainer;
+type Props = IDataSubsectionContainer & ISubsectionOwnProps;
 
 export const DataSubsection: React.FunctionComponent<Props> = ({
   dataset,
   total,
+  datasetProp,
 }) => {
   return (
     <div>
-      <p>Total dividends: {total}</p>
+      <p>
+        Total {datasetProp}: {total}
+      </p>
       <DownloadLink
-        fileName="dividends.csv"
+        fileName={`${datasetProp}.csv`}
         dataset={dataset}
-        text="Download dividends CSV"
+        text={`Download ${datasetProp} CSV`}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { DataItemWithPln, GenericDataItem } from "../types";
+import { DataItemWithPln, GenericDataItem } from "../types/types";
 import { subtractDaysAndFormatDate } from "./datetimeManipulations";
 
 // TODO use reselect here

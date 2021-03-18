@@ -1,4 +1,4 @@
-import { GenericDataItem, IGenericParseResult } from "../../types";
+import { GenericDataItem, IGenericParseResult } from "../../types/types";
 
 const REVOLUT_ROW_PROPERTIES: (keyof GenericDataItem | null)[] = [
   "tradeDate",

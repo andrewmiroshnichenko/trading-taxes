@@ -1,10 +1,5 @@
-import { IDataStore } from "../../types";
+import { IDataStore, IUpdateDataAction } from "../../types/redux";
 import { UPDATE_DATA_STORE } from "../actionTypes";
-
-export interface IUpdateDataAction {
-  type: typeof UPDATE_DATA_STORE;
-  payload: IDataStore;
-}
 
 export const updateDataStore = (data: IDataStore): IUpdateDataAction => ({
   type: UPDATE_DATA_STORE,

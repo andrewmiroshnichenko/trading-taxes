@@ -1,4 +1,4 @@
-import { Rate } from "../types";
+import { Rate } from "../types/types";
 
 export const buildRatesMap = (rates: Rate[]): Map<string, number> => {
   return rates.reduce((acc, rate) => {

@@ -1,4 +1,3 @@
-import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { FileInput } from "../components/FileInput";
 import { updateDataStore } from "../redux/actionCreators/dataActions";

@@ -1,5 +1,5 @@
 import { isNpbResponse } from "../../typeGuards";
-import { ITimeRange, NbpResponse, Rate } from "../../types";
+import { ITimeRange, NbpResponse, Rate } from "../../types/types";
 
 // http://api.nbp.pl/
 const API_STRING = "https://api.nbp.pl/api/exchangerates/rates";
