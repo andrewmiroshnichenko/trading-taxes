@@ -1,4 +1,4 @@
-import { DividendsWithSum, DataItemWithPln } from "../../types";
+import { DividendsWithSum, DataItemWithPln } from "../../types/types";
 import { revolutDividendActivities } from "../transformers/revoluteToGeneric";
 
 const DIVIDEND_CSV_HEADER = [

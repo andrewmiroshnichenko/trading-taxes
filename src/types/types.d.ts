@@ -42,13 +42,6 @@ export interface TradesWithTotalSum {
   totalTradesProfitPln: number;
 }
 
-export interface ContextInterface {
-  trades: string;
-  dividends: string;
-  dividendsTotal: number;
-  tradesTotal: number;
-}
-
 export interface ITimeRange {
   endDate: string;
   startDate: string;

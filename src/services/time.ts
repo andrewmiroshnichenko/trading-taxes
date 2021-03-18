@@ -1,4 +1,4 @@
-import { GenericDataItem, ITimeRange } from "../types";
+import { GenericDataItem, ITimeRange } from "../types/types";
 import {
   formatToGeneralDate,
   subtractDaysAndFormatDate,
