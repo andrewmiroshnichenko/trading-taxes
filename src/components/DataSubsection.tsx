@@ -11,8 +11,9 @@ export const DataSubsection: React.FunctionComponent<Props> = ({
   dataset,
   total,
   datasetProp,
+  isHidden,
 }) => {
-  return (
+  return isHidden ? null : (
     <div>
       <p>
         Total {datasetProp}: {total}

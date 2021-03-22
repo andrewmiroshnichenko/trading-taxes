@@ -13,12 +13,12 @@ import {
   getTradesWithTotalSum,
   prepareTradesToCsv,
 } from "../services/transactionTypeAggregators/trades";
-import { transformRevolutCsvToGeneric } from "../services/transformers/revoluteToGeneric";
 
 type Props = IFileInputContainer;
 
 export const FileInput: React.FunctionComponent<Props> = ({
   updateDataStore,
+  csvTransformationFunction,
 }) => {
   const [excludedOperations, setExcludedOperations] = useState<string[]>([]);
   const onChange = async (
@@ -28,7 +28,7 @@ export const FileInput: React.FunctionComponent<Props> = ({
 
     if (file) {
       const text = await getFileContents(file);
-      const { items, excludedOperations } = transformRevolutCsvToGeneric(text);
+      const { items, excludedOperations } = csvTransformationFunction(text);
       const { endDate, startDate } = getTimeRange(items);
       const yearLongTimeRanges = splitTimeRangeIfNecessary({
         endDate,
@@ -38,6 +38,7 @@ export const FileInput: React.FunctionComponent<Props> = ({
       const ratesMap = buildRatesMap(rates);
       const genericDataWithPlns = extendGenericDataWithPln(items, ratesMap);
 
+      // TODO merge this data retrieval into one function, in the shape of reduce
       const dividendsWithSum = getDividendsWithTotalSum(genericDataWithPlns);
       const tradesWithSum = getTradesWithTotalSum(genericDataWithPlns);
       const dividends = prepareDividendToCsv(dividendsWithSum.dividendRows);
@@ -46,8 +47,10 @@ export const FileInput: React.FunctionComponent<Props> = ({
       updateDataStore({
         dividends,
         trades,
+        interests: "",
         tradesTotal: tradesWithSum.totalTradesProfitPln,
         dividendsTotal: dividendsWithSum.totalDividendsPln,
+        interestsTotal: 0,
       });
       setExcludedOperations(excludedOperations);
     }
