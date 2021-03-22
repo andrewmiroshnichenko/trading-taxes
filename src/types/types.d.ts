@@ -51,3 +51,5 @@ interface IGenericParseResult {
   items: GenericDataItem[];
   excludedOperations: string[];
 }
+
+export type IBrokerTypes = "EXANTE" | "REVOLUT";
