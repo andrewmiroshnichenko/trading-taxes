@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 
 interface Props {
   text: string;

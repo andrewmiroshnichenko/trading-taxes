@@ -1,4 +1,4 @@
-import { CHANGE_BROKER_TYPE } from "../redux/actionTypes";
+import { UPDATE_BROKER_TYPE } from "../redux/actionTypes";
 import { IBrokerTypes } from "./types";
 
 export interface IDataStore {
@@ -15,6 +15,7 @@ export interface IUiStore {
 
 export interface IRootState {
   data: IDataStore;
+  ui: IUiStore;
 }
 
 export interface IUpdateDataAction {
@@ -23,6 +24,6 @@ export interface IUpdateDataAction {
 }
 
 export type IUpdateUiAction = {
-  type: typeof CHANGE_BROKER_TYPE;
+  type: typeof UPDATE_BROKER_TYPE;
   payload: IBrokerTypes;
 };
