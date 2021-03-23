@@ -1,22 +1,23 @@
-import { IDataStore, IUpdateDataAction } from "../../types/redux";
-import { UPDATE_DATA_STORE } from "../actionTypes";
+import { IDataStore } from "../../types/redux";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const defaultState: IDataStore = {
-  dividends: "",
-  trades: "",
-  interests: "",
-  dividendsTotal: 0,
-  tradesTotal: 0,
-  interestsTotal: 0,
-};
+const data = createSlice({
+  name: "data",
+  initialState: {
+    dividends: "",
+    trades: "",
+    interests: "",
+    dividendsTotal: 0,
+    tradesTotal: 0,
+    interestsTotal: 0,
+  },
+  reducers: {
+    updateData(state, action: PayloadAction<IDataStore>) {
+      state = action.payload;
+    },
+  },
+});
 
-export const dataReducer = (
-  state = defaultState,
-  action: IUpdateDataAction
-): IDataStore => {
-  if (action.type === UPDATE_DATA_STORE) {
-    return action.payload;
-  }
+export default data.reducer;
 
-  return state;
-};
+export const { updateData } = data.actions;
