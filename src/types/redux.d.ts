@@ -2,13 +2,15 @@ import { UPDATE_BROKER_TYPE } from "../redux/actionTypes";
 import { IBrokerTypes } from "./types";
 
 export interface IDataStore {
-  trades: string;
-  dividends: string;
-  interests: string;
-  dividendsTotal: number;
-  tradesTotal: number;
-  interestsTotal: number;
-  [k: string]: string | number;
+  parsedData: {
+    trades: string;
+    dividends: string;
+    interests: string;
+    dividendsTotal: number;
+    tradesTotal: number;
+    interestsTotal: number;
+    [k: string]: string | number;
+  };
 }
 
 export interface IUiStore {

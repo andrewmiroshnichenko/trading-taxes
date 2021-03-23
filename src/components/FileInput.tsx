@@ -17,7 +17,7 @@ import {
 type Props = IFileInputContainer;
 
 export const FileInput: React.FunctionComponent<Props> = ({
-  updateDataStore,
+  updateData,
   csvTransformationFunction,
 }) => {
   const [excludedOperations, setExcludedOperations] = useState<string[]>([]);
@@ -44,7 +44,7 @@ export const FileInput: React.FunctionComponent<Props> = ({
       const dividends = prepareDividendToCsv(dividendsWithSum.dividendRows);
       const trades = prepareTradesToCsv(tradesWithSum.tradesRows);
 
-      updateDataStore({
+      updateData({
         dividends,
         trades,
         interests: "",
