@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IUiStore } from "../../types/redux";
 import { IBrokerTypes } from "../../types/types";
 
 export const BROKERS: Record<string, IBrokerTypes> = {
@@ -8,10 +9,10 @@ export const BROKERS: Record<string, IBrokerTypes> = {
 
 export const ui = createSlice({
   name: "ui",
-  initialState: { brokerType: BROKERS.REVOLUT },
+  initialState: { broker: BROKERS.REVOLUT } as IUiStore,
   reducers: {
     updateBroker: (state, action: PayloadAction<IBrokerTypes>) => {
-      state.brokerType = action.payload;
+      state.broker = action.payload;
     },
   },
 });

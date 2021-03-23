@@ -1,10 +1,10 @@
 import { connect, ConnectedProps } from "react-redux";
 import { FileInput } from "../components/FileInput";
-import { updateDataStore } from "../redux/actionCreators/dataActions";
-import { BROKERS } from "../redux/reducers/ui";
+import { updateData } from "../redux/slices/data";
+import { BROKERS } from "../redux/slices/ui";
 import { transformRevolutCsvToGeneric } from "../services/transformers/revoluteToGeneric";
 import { IBrokerTypes } from "../types/types";
-import { IRootState } from "../types/redux";
+import { IRootState } from "../redux/store";
 
 const mapBrokerToTransformFunction = (broker: IBrokerTypes) => {
   if (broker === BROKERS.EXANTE) {
@@ -24,7 +24,7 @@ const mapStateToFileInputProps = ({ ui }: IRootState) => {
   };
 };
 
-const connector = connect(mapStateToFileInputProps, { updateDataStore });
+const connector = connect(mapStateToFileInputProps, { updateData });
 
 export type IFileInputContainer = ConnectedProps<typeof connector>;
 

@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { IBrokerSelectContainer } from "../containers/BrokerSelectContainer";
-import { BROKERS } from "../redux/reducers/ui";
+import { BROKERS } from "../redux/slices/ui";
 import { IBrokerTypes } from "../types/types";
 
 type Props = IBrokerSelectContainer;
@@ -22,13 +22,13 @@ const options = Object.values(BROKER_OPTIONS).map(({ label, value }) => (
 
 export const BrokerSelect: React.FunctionComponent<Props> = ({
   selectedBroker,
-  updateBrokerType,
+  updateBroker,
 }) => {
   const onBrokerTypeChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
-      updateBrokerType(event.target.value as IBrokerTypes);
+      updateBroker(event.target.value as IBrokerTypes);
     },
-    [updateBrokerType]
+    [updateBroker]
   );
 
   return (
