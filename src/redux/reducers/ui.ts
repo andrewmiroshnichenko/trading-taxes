@@ -1,3 +1,4 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUiStore, IUpdateUiAction } from "../../types/redux";
 import { IBrokerTypes } from "../../types/types";
 import { UPDATE_BROKER_TYPE } from "../actionTypes";
@@ -11,13 +12,16 @@ const defaultState: IUiStore = {
   broker: BROKERS.REVOLUT,
 };
 
-export const uiReducer = (
-  state = defaultState,
-  action: IUpdateUiAction
-): IUiStore => {
-  if (action.type === UPDATE_BROKER_TYPE) {
-    return { ...state, broker: action.payload };
-  }
+export const ui = createSlice({
+  name: "ui",
+  initialState: { brokerType: BROKERS.REVOLUT },
+  reducers: {
+    updateBroker: (state, action: PayloadAction<IBrokerTypes>) => {
+      state.brokerType = action.payload;
+    },
+  },
+});
 
-  return state;
-};
+export const { updateBroker } = ui.actions;
+
+export default ui.reducer;
