@@ -27,5 +27,6 @@ export const extendGenericDataWithPln = (
     const amountPln = parseFloat(
       (parseInt((properRate * item.amount * 100).toString()) / 100).toString()
     );
+
     return { ...item, rate: properRate, pricePln, amountPln };
   });

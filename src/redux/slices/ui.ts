@@ -9,7 +9,7 @@ export const BROKERS: Record<string, IBrokerTypes> = {
 
 export const ui = createSlice({
   name: "ui",
-  initialState: { broker: BROKERS.REVOLUT } as IUiStore,
+  initialState: { broker: BROKERS.EXANTE } as IUiStore,
   reducers: {
     updateBroker: (state, action: PayloadAction<IBrokerTypes>) => {
       state.broker = action.payload;
