@@ -1,17 +1,5 @@
 import { GenericDataItem, IGenericParseResult } from "../../types/types";
 
-const REVOLUT_ROW_PROPERTIES: (keyof GenericDataItem | null)[] = [
-  "tradeDate",
-  null,
-  "currency",
-  "activityType",
-  null,
-  "symbol",
-  null,
-  "quantity",
-  "price",
-  "amount",
-];
 export const revolutTransactionActivities = new Set(["SELL", "BUY"]);
 export const revolutDividendActivities = new Set(["DIV", "DIVNRA"]);
 const validActivityTypes = new Set([
@@ -19,26 +7,29 @@ const validActivityTypes = new Set([
   ...revolutDividendActivities,
 ]);
 
-export const mapRevolutCsvRowToGenericObject = (
-  acc: GenericDataItem,
-  item: string,
-  index: number
-): GenericDataItem => {
-  const key = REVOLUT_ROW_PROPERTIES[index];
-  if (key === "amount" || key === "price" || key === "quantity") {
-    acc[key] = parseFloat(item);
-  } else if (key !== null) {
-    acc[key] = item;
-  }
+export const transformRevolutRow = (rowString: string): GenericDataItem => {
+  const params = rowString.replace(/"/g, "").split(",");
+  const dealSign = -1 * Math.sign(parseFloat(params[7]));
+  const tradeDate = params[0];
+  const currency = params[2];
+  const amount = dealSign
+    ? dealSign * parseFloat(params[9])
+    : parseFloat(params[9]);
+  const price = dealSign * parseFloat(params[8]);
+  const quantity = Math.abs(parseFloat(params[7]));
+  const symbol = params[5];
+  const activityType = params[3];
 
-  return acc;
+  return {
+    price,
+    tradeDate,
+    amount,
+    currency,
+    quantity,
+    symbol,
+    activityType,
+  } as GenericDataItem;
 };
-
-export const transformRevolutRow = (rowString: string): GenericDataItem =>
-  rowString
-    .replace(/"/g, "")
-    .split(",")
-    .reduce(mapRevolutCsvRowToGenericObject, {} as GenericDataItem);
 
 export const transformRevolutCsvToGeneric = (
   text: string
