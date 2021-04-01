@@ -56,51 +56,52 @@ export const getTradesWithTotalSum = (
 
   const tradesFilteredAndSorted: TradeWithProfit[] = genericData
     .filter((item) => revolutTransactionActivities.has(item.activityType))
-    .sort((itemA, itemB) =>
-      Date.parse(itemA.tradeDate) > Date.parse(itemB.tradeDate) ? 1 : -1
-    )
     .map((trade) => {
       if (!dealsMap.has(trade.symbol)) {
         dealsMap.set(trade.symbol, []);
       }
 
       const arrayOfSharePrices = dealsMap.get(trade.symbol) as number[];
-      const tradeSign = Math.sign(trade.quantity);
       const arrayOfSharePricesLength = arrayOfSharePrices?.length;
 
       if (
         arrayOfSharePricesLength === 0 ||
-        arrayOfSharePrices[0] * trade.quantity > 0
+        arrayOfSharePrices[0] * trade.pricePln > 0
       ) {
         const currentArrayOfSharePrices = arrayOfSharePrices.length;
-        for (let i = 0; i < tradeSign * trade.quantity; i++) {
-          arrayOfSharePrices[currentArrayOfSharePrices + i] =
-            trade.pricePln * tradeSign;
+        for (let i = 0; i < trade.quantity; i++) {
+          arrayOfSharePrices[currentArrayOfSharePrices + i] = trade.pricePln;
         }
         return trade;
       } else {
         let dealProfitPln = 0;
         const remainedNumberOfTradeShares =
-          tradeSign * trade.quantity - arrayOfSharePricesLength;
+          trade.quantity - arrayOfSharePricesLength;
 
         const lowestLength =
           remainedNumberOfTradeShares <= 0
-            ? tradeSign * trade.quantity
+            ? trade.quantity
             : arrayOfSharePricesLength;
 
         for (let i = 0; i < lowestLength; i++) {
-          dealProfitPln +=
-            (trade.pricePln * tradeSign +
-              (arrayOfSharePrices.shift() as number)) *
-            PROFIT_SIGN_INVERSION;
+          const valueFromArr = arrayOfSharePrices.shift() as number;
+          dealProfitPln += trade.pricePln + valueFromArr;
         }
         for (let i = 0; i < remainedNumberOfTradeShares; i++) {
-          arrayOfSharePrices[i] = trade.pricePln * tradeSign;
+          arrayOfSharePrices[i] = trade.pricePln;
         }
+
         totalTradesProfitPln += dealProfitPln;
-        return { ...trade, dealProfitPln, numberOfMatchedShares: lowestLength };
+        return {
+          ...trade,
+          dealProfitPln: Number(dealProfitPln.toFixed(2)),
+          numberOfMatchedShares: lowestLength,
+        };
       }
     });
 
-  return { tradesRows: tradesFilteredAndSorted, totalTradesProfitPln };
+  return {
+    tradesRows: tradesFilteredAndSorted,
+    totalTradesProfitPln: Number(totalTradesProfitPln.toFixed(2)),
+  };
 };

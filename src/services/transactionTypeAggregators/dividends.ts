@@ -42,7 +42,7 @@ export const getDividendsWithTotalSum = (
   allData
     .filter((item) => revolutDividendActivities.has(item.activityType))
     .reduce(
-      (acc, item, index, array) => {
+      (acc, item, _, array) => {
         // Decision about type of aggregation field
         const key =
           item.activityType === "DIV" ? "totalDividendsPln" : "totalTaxesPln";
@@ -50,7 +50,7 @@ export const getDividendsWithTotalSum = (
         return {
           ...acc,
           dividendRows: array,
-          [key]: acc[key] + item.amountPln,
+          [key]: Number(acc[key] + item.amountPln).toFixed(2),
         };
       },
       {

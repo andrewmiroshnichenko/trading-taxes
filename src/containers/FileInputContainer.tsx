@@ -3,12 +3,14 @@ import { FileInput } from "../components/FileInput";
 import { updateData } from "../redux/slices/data";
 import { BROKERS } from "../redux/slices/ui";
 import { transformRevolutCsvToGeneric } from "../services/transformers/revoluteToGeneric";
+import { transformExanteCsvToGeneric } from "../services/transformers/exanteToGeneric";
+
 import { IBrokerTypes } from "../types/types";
 import { IRootState } from "../redux/store";
 
 const mapBrokerToTransformFunction = (broker: IBrokerTypes) => {
   if (broker === BROKERS.EXANTE) {
-    return transformRevolutCsvToGeneric;
+    return transformExanteCsvToGeneric;
   }
 
   return transformRevolutCsvToGeneric;
