@@ -50,7 +50,7 @@ export const getDividendsWithTotalSum = (
         return {
           ...acc,
           dividendRows: array,
-          [key]: Number(acc[key] + item.amountPln).toFixed(2),
+          [key]: Number(Number(acc[key] + item.amountPln).toFixed(2)),
         };
       },
       {

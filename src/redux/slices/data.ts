@@ -7,10 +7,10 @@ const data = createSlice({
     parsedData: {
       dividends: "",
       trades: "",
-      interests: "",
+      fees: "",
       dividendsTotal: 0,
       tradesTotal: 0,
-      interestsTotal: 0,
+      feesTotal: 0,
     },
   } as IDataStore,
   reducers: {
