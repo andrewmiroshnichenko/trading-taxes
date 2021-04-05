@@ -4,6 +4,8 @@ import { IDataStore } from "../../types/redux";
 const data = createSlice({
   name: "data",
   initialState: {
+    startDate: "",
+    endDate: "",
     parsedData: {
       dividends: "",
       trades: "",
@@ -16,6 +18,13 @@ const data = createSlice({
   reducers: {
     updateData(state, action: PayloadAction<IDataStore["parsedData"]>) {
       state.parsedData = action.payload;
+    },
+    updateRange(
+      state,
+      action: PayloadAction<{ startDate: string; endDate: string }>
+    ) {
+      state.startDate = action.payload.startDate;
+      state.endDate = action.payload.endDate;
     },
   },
 });

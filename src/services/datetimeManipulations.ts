@@ -4,6 +4,7 @@ import parse from "date-fns/parse";
 
 export const changeExanteDateFormat = (date: string): string => {
   const parsed = parse(date, "dd/MM/yyyy", new Date());
+  // console.log(date, parsed);
   const formatted = format(parsed, "MM/dd/yyyy");
   return formatted;
 };
