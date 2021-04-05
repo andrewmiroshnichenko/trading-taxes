@@ -1,4 +1,4 @@
-import { DataItemWithPln, IFeeWithSum, IFee } from "../../types/types";
+import { DataItemWithPln, IFeeWithSum } from "../../types/types";
 
 const FEE_CSV_HEADER = [
   "Date",

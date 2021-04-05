@@ -5,9 +5,6 @@ import {
 } from "../../types/types";
 import { revolutTransactionActivities } from "../transformers/revoluteToGeneric";
 
-// Because of inverted BUY/SELL prices (which means that on BUY operation we have pricePln +10, on SELL it can be -15,
-// and total will result in -5, but in fact this deal is closed with profit of 5) we need to invert sign of computed amount
-const PROFIT_SIGN_INVERSION = -1;
 const TRADE_CSV_HEADER = [
   "Date",
   "Symbol",

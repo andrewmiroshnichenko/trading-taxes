@@ -2,6 +2,8 @@ import { UPDATE_BROKER_TYPE } from "../redux/actionTypes";
 import { IBrokerTypes } from "./types";
 
 export interface IDataStore {
+  startDate: string;
+  endDate: string;
   parsedData: {
     trades: string;
     dividends: string;

@@ -2,10 +2,12 @@ import React from "react";
 import { BrokerSelectContainer } from "./containers/BrokerSelectContainer";
 import { DataSubsectionContainer } from "./containers/DataSubsectionContainer";
 import { FileInputContainer } from "./containers/FileInputContainer";
+import { TimeRangeSelectContainer } from "./containers/TimeRangeSelectContainer";
 
 function App(): JSX.Element {
   return (
     <>
+      <TimeRangeSelectContainer />
       <BrokerSelectContainer />
       <FileInputContainer />
       <DataSubsectionContainer datasetProp="trades" totalProp="tradesTotal" />
