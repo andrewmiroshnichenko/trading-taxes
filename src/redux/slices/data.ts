@@ -31,4 +31,4 @@ const data = createSlice({
 
 export default data.reducer;
 
-export const { updateData } = data.actions;
+export const { updateData, updateRange } = data.actions;
