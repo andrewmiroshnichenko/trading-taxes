@@ -13,10 +13,7 @@ function App(): JSX.Element {
         datasetProp="dividends"
         totalProp="dividendsTotal"
       />
-      <DataSubsectionContainer
-        datasetProp="interests"
-        totalProp="interestsTotal"
-      />
+      <DataSubsectionContainer datasetProp="fees" totalProp="feesTotal" />
     </>
   );
 }

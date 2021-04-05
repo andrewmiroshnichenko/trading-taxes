@@ -41,14 +41,14 @@ export type ITrade = GenericDataItemCommonFields & {
   price: number;
 };
 
-export type IInterest = GenericDataItemCommonFields & {
-  activityType: "INTEREST";
-  symbol: "";
+export type IFee = GenericDataItemCommonFields & {
+  activityType: "INTEREST" | "COMMISSION" | "ROLLOVER";
+  symbol: string;
   quantity: 0;
   price: 0;
 };
 
-export type GenericDataItem = IDividendOrCommission | ITrade | IInterest;
+export type GenericDataItem = IDividendOrCommission | ITrade | IFee;
 
 export type DataItemWithPln = GenericDataItem & {
   pricePln: number;
@@ -56,7 +56,7 @@ export type DataItemWithPln = GenericDataItem & {
   amountPln: number;
 };
 
-export interface DividendsWithSum {
+export interface IDividendsWithSum {
   dividendRows: DataItemWithPln[];
   totalDividendsPln: number;
   totalTaxesPln: number;
@@ -69,6 +69,11 @@ export type TradeWithProfit = DataItemWithPln & {
 export interface TradesWithTotalSum {
   tradesRows: TradeWithProfit[];
   totalTradesProfitPln: number;
+}
+
+export interface IFeeWithSum {
+  feeRows: DataItemWithPln[];
+  totalFeesPln: number;
 }
 
 export interface ITimeRange {

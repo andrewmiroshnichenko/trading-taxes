@@ -1,4 +1,4 @@
-import { DividendsWithSum, DataItemWithPln } from "../../types/types";
+import { IDividendsWithSum, DataItemWithPln } from "../../types/types";
 import { revolutDividendActivities } from "../transformers/revoluteToGeneric";
 
 const DIVIDEND_CSV_HEADER = [
@@ -38,7 +38,7 @@ export const prepareDividendToCsv = (dividends: DataItemWithPln[]): string =>
 
 export const getDividendsWithTotalSum = (
   allData: DataItemWithPln[]
-): DividendsWithSum =>
+): IDividendsWithSum =>
   allData
     .filter((item) => revolutDividendActivities.has(item.activityType))
     .reduce(
@@ -50,12 +50,12 @@ export const getDividendsWithTotalSum = (
         return {
           ...acc,
           dividendRows: array,
-          [key]: Number(acc[key] + item.amountPln).toFixed(2),
+          [key]: Number(Number(acc[key] + item.amountPln).toFixed(2)),
         };
       },
       {
         dividendRows: [],
         totalDividendsPln: 0,
         totalTaxesPln: 0,
-      } as DividendsWithSum
+      } as IDividendsWithSum
     );

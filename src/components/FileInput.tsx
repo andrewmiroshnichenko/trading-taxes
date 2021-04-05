@@ -10,6 +10,10 @@ import {
   prepareDividendToCsv,
 } from "../services/transactionTypeAggregators/dividends";
 import {
+  getFeesWithTotalSum,
+  prepareFeeToCsv,
+} from "../services/transactionTypeAggregators/fees";
+import {
   getTradesWithTotalSum,
   prepareTradesToCsv,
 } from "../services/transactionTypeAggregators/trades";
@@ -27,6 +31,7 @@ export const FileInput: React.FunctionComponent<Props> = ({
     const file = event.target.files?.[0];
 
     if (file) {
+      const now = Date.now();
       const text = await getFileContents(file);
       const { items, excludedOperations } = csvTransformationFunction(text);
       const { endDate, startDate } = getTimeRange(items);
@@ -41,16 +46,20 @@ export const FileInput: React.FunctionComponent<Props> = ({
       // TODO merge this data retrieval into one function, in the shape of reduce
       const dividendsWithSum = getDividendsWithTotalSum(genericDataWithPlns);
       const tradesWithSum = getTradesWithTotalSum(genericDataWithPlns);
+      const feesWithSum = getFeesWithTotalSum(genericDataWithPlns);
       const dividends = prepareDividendToCsv(dividendsWithSum.dividendRows);
       const trades = prepareTradesToCsv(tradesWithSum.tradesRows);
+      const fees = prepareFeeToCsv(feesWithSum.feeRows);
+
+      console.log(Date.now() - now);
 
       updateData({
         dividends,
         trades,
-        interests: "",
+        fees,
         tradesTotal: tradesWithSum.totalTradesProfitPln,
         dividendsTotal: dividendsWithSum.totalDividendsPln,
-        interestsTotal: 0,
+        feesTotal: feesWithSum.totalFeesPln,
       });
       setExcludedOperations(excludedOperations);
     }

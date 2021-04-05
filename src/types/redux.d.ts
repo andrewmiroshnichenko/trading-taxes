@@ -5,10 +5,10 @@ export interface IDataStore {
   parsedData: {
     trades: string;
     dividends: string;
-    interests: string;
+    fees: string;
     dividendsTotal: number;
     tradesTotal: number;
-    interestsTotal: number;
+    feesTotal: number;
     [k: string]: string | number;
   };
 }
