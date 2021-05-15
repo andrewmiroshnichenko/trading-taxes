@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import { Link } from "react-router-dom";
 import { IBrokerSelectContainer } from "../containers/BrokerSelectContainer";
 import { BROKERS } from "../redux/slices/ui";
 import { IBrokerTypes } from "../types/types";
@@ -32,8 +33,16 @@ export const BrokerSelect: React.FunctionComponent<Props> = ({
   );
 
   return (
-    <select value={selectedBroker} onChange={onBrokerTypeChange}>
-      {options}
-    </select>
+    <div>
+      <select value={selectedBroker} onChange={onBrokerTypeChange}>
+        {options}
+      </select>
+      <Link
+        to={`/${selectedBroker.toLowerCase()}-details`}
+        style={{ marginLeft: 20 }}
+      >
+        Learn more about required format of {selectedBroker} report
+      </Link>
+    </div>
   );
 };
