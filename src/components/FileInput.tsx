@@ -68,7 +68,9 @@ export const FileInput: React.FunctionComponent<Props> = ({
   return (
     <>
       <label htmlFor="main-file-input">
-        Drop file, or chose one by clicking here
+        <div className="drop-file-text">
+          Drop file, or chose one by clicking here
+        </div>
       </label>
       <div>
         <input type="file" id="main-file-input" onChange={onChange} />
