@@ -34,10 +34,10 @@ export const BrokerSelect: React.FunctionComponent<Props> = ({
 
   return (
     <div>
-      <select value={selectedBroker} onChange={onBrokerTypeChange}>
+      <select className="broker-select" value={selectedBroker} onChange={onBrokerTypeChange}>
         {options}
       </select>
-      <Link
+      <Link className="selected-broker-info-link"
         to={`/${selectedBroker.toLowerCase()}-details`}
         style={{ marginLeft: 20 }}
       >
