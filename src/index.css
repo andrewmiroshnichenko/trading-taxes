@@ -8,34 +8,459 @@ body {
   /* color: red; */
 }
 
+a, a:link, a:visited, a:focus, a:hover, a:active{
+  /* color:olive; */
+  text-decoration:none; 
+  /* color : white; */
+  /* cursor: crosshair; */
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
+
+.header {
+  position: relative;
+  height: 150px;
+}
+
+.header-title {
+  width: 100px;
+  position: absolute;
+  /* left: 25vw; */
+  left : 20%;
+  right:20%;
+  top : 30px;
+}
+
+.header-title-circle {
+    height: 100px;
+    width: 100px;
+    background-color: #F1770D;
+    border-radius: 50%;
+    position: absolute;
+    /* top : 30px; */
+    /* left: 100px; */
+    z-index: 1;
+
+}
+
+.header-title-main {
+  /* background-color : yellow; */
+  /* padding-left: 26vw; */
+  position: absolute;
+  top : 20px;
+  left: 35px;
+  color : #047AEB;
+  font-size: 40px;
+  font-weight: bold;
+  z-index: 2;
+}
+
+.header-subtitle {
+  /* background-color : yellow; */
+  position : absolute;
+  left : 100px;
+  top : 70px;
+  width: 30vw;
+  z-index: 2;
+  color : black;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+
+.steps-dates-row {
+  display: flex;
+  justify-content: center;
+  /* position: relative; */
+  height: 300px;
+  /* display: flex; */
+  /* flex-direction: row; */
+  /* flex-wrap: nowrap; */
+  /* justify-content: space-evenly; */
+}
+
+.info-steps {
+  width: 30%;
+  /* background: turquoise; */
+  /* display: flex; */
+  position: relative;
+}
+
+.info-step-1 {
+  /* display: inline; */
+  position: absolute;
+  /* display: flex; */
+  /* flex-direction: column; */
+  left : 30px;
+  top : 0px;
+}
+
+.info-step-1-1 { 
+  position: absolute;
+  left: 45px;
+  top : 28px;
+  z-index: 2;
+  color: white;
+  /* font-weight: bold;*/
+
+}
+
+.info-step-1-text {
+  position: absolute;
+  width: 100px;
+  z-index: 2;
+  top : 48px;
+  left : 15px;
+  color: white;
+  /* font-weight: bold; */
+
+}
+
+
+.info-step-1-circle {
+  height: 100px;
+  width: 100px;
+  background-color: #047AEB;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 1;
+}
+
+
+.info-step-2 {
+  /* display: inline; */
+  position: absolute;
+  /* display: flex; */
+  /* flex-direction: column; */
+  left : 110px;
+  top : 100px;
+}
+
+.info-step-2-circle {
+  height: 80px;
+  width: 80px;
+  background-color: #F1770D;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 1;
+}
+
+
+.info-step-2-2 { 
+  position: absolute;
+  left: 35px;
+  top : 10px;
+  z-index: 2;
+  color: white;
+  /* font-weight: bold;*/
+
+}
+
+.info-step-2-text {
+  position: absolute;
+  width: 100px;
+  z-index: 2;
+  top : 30px;
+  left : 5px;
+  color: white;
+  /* font-weight: bold; */
+
+}
+
+.info-step-3 {
+  /* display: inline; */
+  position: absolute;
+  /* display: flex; */
+  /* flex-direction: column; */
+  left : 40px;
+  top : 150px;
+}
+
+.info-step-3-circle {
+  height: 60px;
+  width: 60px;
+  background-color: black;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 1;
+}
+
+
+.info-step-3-3 { 
+  position: absolute;
+  left: 27px;
+  top : 10px;
+  z-index: 2;
+  color: white;
+  /* font-weight: bold;*/
+
+}
+
+.info-step-3-text {
+  position: absolute;
+  width: 100px;
+  z-index: 2;
+  top : 25px;
+  left : 5px;
+  color: white;
+  /* font-weight: bold; */
+
+}
+
+
 #root {
-  width: 50%;
-  margin: 0 auto;
+  /* width: 50%; */
+  /* margin: 0 auto; */
   /* margin-left: 10vw; */
   /* margin-top: 10vh; */
   
 }
 
-.time-range-select {
-  margin-top: 5vh;
+.time-range-tile {
+  background: #047AEB;
+  /* margin-top: 5vh; */
+   width: 30%;
+  /* background: yellow;  */
   display: flex;
-  flex-direction: row;
-  /* justify-content: space-between; */
+  flex-direction: column;
+  align-items: center;
+  /* align-content: center; */
+
+  /* display: inline; */
+  justify-content: space-evenly;
 }
 
-.start-date-text  {
-  margin-right: 1vw;
+.start-date-container  {
+  /* background: red; */
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.end-date-container  {
+  /* background: red; */
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.start-date-text {
+  font-size: 16px;
+  font-weight: bold;
+  /* color: red; */
+}
+
+.end-date-text  {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.broker-select-tile {
+  background: #F1770D;
+  /* margin-top: 5vh; */
+  width: 30%; 
+  height: 300px;
+  margin-left: 20vw;
+  /* justify-content: center; */
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  display: inline-block;
+  position: relative;
+  /* padding-left: 20px; */
+  /* padding-top: 20px; */
 }
 
 .broker-select {
-  margin-bottom: 5vh;
+  margin-left : 20px; 
+  margin-top: 20px;
 }
 
-.drop-file-text {
-  margin-bottom : 1vh;
+.selected-broker-info-link {
+  /* position: absolute; */
+  /* top : 50px; */
 }
+
+
+.file-input-tile {
+  /* background: #F1770D; */
+  /* margin-top: 5vh; */
+   width: 10vw;
+   /* height: 400px; */
+   display: inline-block;
+   margin-right: 20vw;
+   position: relative;
+}
+
+.file-input-both {
+  position: absolute;
+  z-index: 2;
+  left : 130px;
+  top : 100px;
+  color: white;
+
+}
+
+.file-input-circle {
+  height: 220px;
+  width: 220px;
+  background-color: black;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 1;
+  top : 20px;
+  left : 100px;
+}
+
+.trades {
+  width: 20%;
+  margin-left: 20vw;
+  display: inline-block;
+  position: relative;
+  /* color: #047AEB; */
+}
+
+.trades-circle {
+  height: 150px;
+  width: 150px;
+  background-color: #047AEB;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 1;
+  /* top : 20px; */
+  left : 20px;
+}
+
+.trades-text {
+  position: absolute;
+  z-index: 2;
+  color: white;
+  left: 55px;
+  top : 40px;
+  text-align: center;
+}
+
+.trades-number {
+  margin-top: 10px;
+  background-color: #C4C4C4;
+  width: 80px;
+  height: 30px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.trades-report a{ 
+  text-decoration: underline;
+  position: absolute;
+  top : 110px;
+  left  : 70px;
+  z-index: 2;
+  color:  white; 
+}
+
+.dividends {
+  width: 20%;
+  /* margin-left: 20vw; */
+  display: inline-block;
+  position: relative;
+  /* color: #F1770D; */
+}
+
+.dividends-circle {
+  height: 150px;
+  width: 150px;
+  background-color: #F1770D;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 1;
+  /* top : 20px; */
+  left : 20px;
+}
+
+.dividends-text {
+  position: absolute;
+  z-index: 2;
+  color: white;
+  left: 55px;
+  top : 40px;
+  text-align: center;
+}
+
+.dividends-number {
+  margin-top: 10px;
+  background-color: #C4C4C4;
+  width: 80px;
+  height: 30px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.dividends-report a{ 
+  position: absolute;
+  top : 110px;
+  left  : 70px;
+  z-index: 2;
+  color:  white; 
+  text-decoration: underline;
+}
+
+
+.fees {
+  width: 20%;
+  /* margin-left: 20vw; */
+  display: inline-block;
+  position: relative;
+}
+
+.fees-circle {
+  height: 150px;
+  width: 150px;
+  background-color: black;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 1;
+  /* top : 20px; */
+  left : 20px;
+}
+
+.fees-text {
+  position: absolute;
+  z-index: 2;
+  color: white;
+  left: 55px;
+  top : 40px;
+  text-align: center;
+}
+
+.fees-number {
+  margin-top: 10px;
+  background-color: #C4C4C4;
+  width: 80px;
+  height: 30px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.fees-report a{ 
+  position: absolute;
+  top : 110px;
+  left  : 70px;
+  z-index: 2;
+  color:  white; 
+  text-decoration: underline;
+}
+
+
+
+
+ 
+
+/* .drop-file-text {
+  margin-bottom : 1vh;
+}  */

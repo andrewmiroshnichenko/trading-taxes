@@ -17,32 +17,59 @@ export const TimeRangeSelect: React.FunctionComponent<Props> = ({
   );
 
   return (
-    <div className="time-range-select" style={{ marginBottom: 30 }}>
-      <label htmlFor="report-range-start">
-        <span className="start-date-text">
-        Start date:{" "}
-        <input
-          id="report-range-start"
-          type="date"
-          onChange={timeUpdateCallback}
-          value={startDate}
-          name="startDate"
-        />
-        </span>
-      </label>
-      <label htmlFor="report-range-end">
-        <span className="end-date-text">
-        Start date:{" "}
-        End date:{" "}
-        <input
-          id="report-range-end"
-          type="date"
-          onChange={timeUpdateCallback}
-          value={endDate}
-          name="endDate"
-        />
-        </span>
-      </label>
+    <div className="steps-dates-row">
+
+      <div className="info-steps">
+        <div className="info-step-1">
+          <div className="info-step-1-1">1</div>
+          <div className="info-step-1-text">Enter date</div>
+          <div className="info-step-1-circle"></div>
+        </div>
+        <div className="info-step-2">
+          <div className="info-step-2-2">2</div>
+          <div className="info-step-2-text">Drop Doc</div>
+          <div className="info-step-2-circle"></div>
+        </div>
+        <div className="info-step-3">
+          <div className="info-step-3-3">3</div>
+          <div className="info-step-3-text">Results</div>
+          <div className="info-step-3-circle"></div>
+        </div>
+      </div>
+      <div className="time-range-tile">
+        <label htmlFor="report-range-end">
+          <div className="start-date-container">
+            <div className="start-date-text">
+              Start date:
+            </div>
+            <div className="start-date-input">
+              {" "}
+              <input
+                id="report-range-end"
+                type="date"
+                onChange={timeUpdateCallback}
+                value={startDate}
+                name="startDate"
+              />
+            </div>
+          </div>
+        </label>
+        <label htmlFor="report-range-end">
+          <div className="end-date-container">
+            <div className="end-date-text">
+              End date:
+          </div>
+            {" "}
+            <input
+              id="report-range-end"
+              type="date"
+              onChange={timeUpdateCallback}
+              value={endDate}
+              name="endDate"
+            />
+          </div>
+        </label>
     </div>
+    </div >
   );
 };
