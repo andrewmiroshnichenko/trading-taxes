@@ -30,6 +30,9 @@ const AboutExante: React.FunctionComponent = () => (
         </p>
       </li>
       <li>Press &quot;Save and Request&quot; button</li>
+      <li>
+        Download report. This CSV can be used as an input file to this app
+      </li>
     </ol>
   </>
 );
