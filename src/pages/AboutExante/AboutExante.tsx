@@ -7,10 +7,10 @@ const AboutExante: React.FunctionComponent = () => (
     <Link to="/">Go Back</Link>
     <h3>Info page about Exante</h3>
     <p>
-      To get proper report on your Exante transaction please follow this steps:
+      To get proper report on your Exante transactions please follow this steps:
     </p>
     <ol>
-      <li>Log in to your Exante acc</li>
+      <li>Log in to your Exante web acc</li>
       <li>Go to Account &gt; Reports area</li>
       <li>Hit &quot;Create custom report&quot; button</li>
       <li>Choose your base currency and CSV as a file format</li>
