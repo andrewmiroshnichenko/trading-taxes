@@ -5,8 +5,8 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
-import AboutExante from "./pages/AboutExante";
-import AboutRevolut from "./pages/AboutRevolut";
+import AboutExante from "./pages/AboutExante/AboutExante";
+import AboutRevolut from "./pages/AboutRevolut/AboutRevolut";
 import Main from "./pages/Main";
 
 const AppRouter: React.FunctionComponent = () => (
