@@ -33,18 +33,18 @@ export const BrokerSelect: React.FunctionComponent<Props> = ({
   );
 
   return (
-    <span className="broker-select-tile">
+    <div className="broker-select-tile">
       <select className="broker-select" value={selectedBroker} onChange={onBrokerTypeChange}>
         {options}
       </select>
-      <span className="selected-broker-info-link">
+      <div className="selected-broker-info-link">
         <Link
           to={`/${selectedBroker.toLowerCase()}-details`}
           style={{ marginLeft: 20 }}
         >
           {selectedBroker} format ?
       </Link>
-      </span>
-    </span>
+      </div>
+    </div>
   );
 };

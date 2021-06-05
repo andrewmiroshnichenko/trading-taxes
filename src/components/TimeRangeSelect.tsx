@@ -23,17 +23,14 @@ export const TimeRangeSelect: React.FunctionComponent<Props> = ({
         <div className="info-step-1">
           <div className="info-step-1-1">1</div>
           <div className="info-step-1-text">Enter date</div>
-          <div className="info-step-1-circle"></div>
         </div>
         <div className="info-step-2">
           <div className="info-step-2-2">2</div>
           <div className="info-step-2-text">Drop Doc</div>
-          <div className="info-step-2-circle"></div>
         </div>
         <div className="info-step-3">
           <div className="info-step-3-3">3</div>
           <div className="info-step-3-text">Results</div>
-          <div className="info-step-3-circle"></div>
         </div>
       </div>
       <div className="time-range-tile">

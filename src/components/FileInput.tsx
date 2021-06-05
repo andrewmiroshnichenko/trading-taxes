@@ -68,9 +68,8 @@ export const FileInput: React.FunctionComponent<Props> = ({
   return (
     <>
 
-      <span className="file-input-tile">
+      <div className="file-input-tile">
 
-      <div className="file-input-both">
         <label htmlFor="main-file-input">
           <div className="drop-file-text">
             Drop or choose file
@@ -82,10 +81,8 @@ export const FileInput: React.FunctionComponent<Props> = ({
         {excludedOperations.length ? (
           <p>Excluding: {excludedOperations.join(", ")}</p>
           ) : null}
-      </div>
-          <div className="file-input-circle"></div>
 
-      </span>
+      </div>
     </>
   );
 };
