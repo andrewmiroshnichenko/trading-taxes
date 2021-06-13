@@ -2,30 +2,11 @@
   box-sizing: border-box;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> changed css to use inline-flex for most elements
-body {
-
-  margin: 0;
-<<<<<<< HEAD
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-=======
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", "Helvetica Neue", sans-serif;
->>>>>>> changed css to use inline-flex for most elements
-=======
-
 body {
 
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
     "Droid Sans", "Helvetica Neue", sans-serif;
->>>>>>> ab3ca8c30f40c8e88eab38fcd1b69fc42bf299b3
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* color: red; */
@@ -44,16 +25,7 @@ a:active {
 }
 
 code {
-<<<<<<< HEAD
-<<<<<<< HEAD
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-=======
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
->>>>>>> changed css to use inline-flex for most elements
-=======
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
->>>>>>> ab3ca8c30f40c8e88eab38fcd1b69fc42bf299b3
 }
 
 .header {
