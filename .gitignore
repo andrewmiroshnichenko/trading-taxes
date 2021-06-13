@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# VS code folder
+trading-taxes-vscode.code-workspace
+
+# Build folder
+build/

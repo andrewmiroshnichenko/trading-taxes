@@ -14,15 +14,20 @@ export const DataSubsection: React.FunctionComponent<Props> = ({
   isHidden,
 }) => {
   return isHidden ? null : (
-    <div>
-      <p>
-        Total {datasetProp}: {total}
-      </p>
+    <div className={`${datasetProp}`}>
+      <div className={`${datasetProp}-text`}>
+        <div>{datasetProp}:</div>
+        <div className= {`${datasetProp}-number`}>{total}</div>
+      </div>
+      <div className ={`${datasetProp}-report`}>
       <DownloadLink
         fileName={`${datasetProp}.csv`}
         dataset={dataset}
-        text={`Download ${datasetProp} CSV`}
+        // text={`Download ${datasetProp} CSV`}
+        text = {`Report`}
       />
+      </div>
+      {/* <div className={`${datasetProp}-circle`}></div> */}
     </div>
   );
 };

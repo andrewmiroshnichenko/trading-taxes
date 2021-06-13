@@ -17,27 +17,56 @@ export const TimeRangeSelect: React.FunctionComponent<Props> = ({
   );
 
   return (
-    <div style={{ marginBottom: 30 }}>
-      <label htmlFor="report-range-end">
-        Start date:{" "}
-        <input
-          id="report-range-end"
-          type="date"
-          onChange={timeUpdateCallback}
-          value={startDate}
-          name="startDate"
-        />
-      </label>
-      <label htmlFor="report-range-end">
-        End date:{" "}
-        <input
-          id="report-range-end"
-          type="date"
-          onChange={timeUpdateCallback}
-          value={endDate}
-          name="endDate"
-        />
-      </label>
+    <div className="steps-dates-row">
+
+      <div className="info-steps">
+        <div className="info-step-1">
+          <div className="info-step-1-1">1</div>
+          <div className="info-step-1-text">Enter date</div>
+        </div>
+        <div className="info-step-2">
+          <div className="info-step-2-2">2</div>
+          <div className="info-step-2-text">Drop Doc</div>
+        </div>
+        <div className="info-step-3">
+          <div className="info-step-3-3">3</div>
+          <div className="info-step-3-text">Results</div>
+        </div>
+      </div>
+      <div className="time-range-tile">
+        <label htmlFor="report-range-end">
+          <div className="start-date-container">
+            <div className="start-date-text">
+              Start date:
+            </div>
+            <div className="start-date-input">
+              {" "}
+              <input
+                id="report-range-end"
+                type="date"
+                onChange={timeUpdateCallback}
+                value={startDate}
+                name="startDate"
+              />
+            </div>
+          </div>
+        </label>
+        <label htmlFor="report-range-end">
+          <div className="end-date-container">
+            <div className="end-date-text">
+              End date:
+          </div>
+            {" "}
+            <input
+              id="report-range-end"
+              type="date"
+              onChange={timeUpdateCallback}
+              value={endDate}
+              name="endDate"
+            />
+          </div>
+        </label>
     </div>
+    </div >
   );
 };

@@ -67,15 +67,22 @@ export const FileInput: React.FunctionComponent<Props> = ({
 
   return (
     <>
-      <label htmlFor="main-file-input">
-        Drop file, or chose one by clicking here
-      </label>
-      <div>
-        <input type="file" id="main-file-input" onChange={onChange} />
+
+      <div className="file-input-tile">
+
+        <label htmlFor="main-file-input">
+          <div className="drop-file-text">
+            Drop or choose file
+          </div>
+        </label>
+        <div>
+          <input type="file" id="main-file-input" onChange={onChange} />
+        </div>
+        {excludedOperations.length ? (
+          <p>Excluding: {excludedOperations.join(", ")}</p>
+          ) : null}
+
       </div>
-      {excludedOperations.length ? (
-        <p>Excluded operations: {excludedOperations.join(", ")}</p>
-      ) : null}
     </>
   );
 };

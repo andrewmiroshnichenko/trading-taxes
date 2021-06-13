@@ -33,16 +33,18 @@ export const BrokerSelect: React.FunctionComponent<Props> = ({
   );
 
   return (
-    <div>
-      <select value={selectedBroker} onChange={onBrokerTypeChange}>
+    <div className="broker-select-tile">
+      <select className="broker-select" value={selectedBroker} onChange={onBrokerTypeChange}>
         {options}
       </select>
-      <Link
-        to={`/${selectedBroker.toLowerCase()}-details`}
-        style={{ marginLeft: 20 }}
-      >
-        Learn more about required format of {selectedBroker} report
+      <div className="selected-broker-info-link">
+        <Link
+          to={`/${selectedBroker.toLowerCase()}-details`}
+          style={{ marginLeft: 20 }}
+        >
+          {selectedBroker} format ?
       </Link>
+      </div>
     </div>
   );
 };
