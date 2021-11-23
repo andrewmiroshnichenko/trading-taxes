@@ -14,6 +14,7 @@ const getActivityType = (type: string): string => {
 export const transformExanteRow = (row: string | string[]): GenericDataItem => {
   if (typeof row === "string") {
     const params = row.split(";");
+    console.log(params);
     const symbol = params[2] === "None" ? "" : params[2];
     const tradeDate = changeExanteDateFormat(params[5].split(" ")[0]);
     const activityType = getActivityType(params[4]);
