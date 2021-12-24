@@ -53,7 +53,6 @@ export const getTradesWithTotalSum = (
   const dealsMap = new Map() as Map<string, number[]>;
   const setStartTimeStamp = customStartTimestamp ?  Date.parse(customStartTimestamp) : '';
   const setEndTimeStamp = customEndTimestamp ? Date.parse(customEndTimestamp) : ''
-  let totalTradesProfitPln = 0;
 
   const tradesFilteredAndSorted: TradeWithProfit[] = genericData
     .filter((item) => revolutTransactionActivities.has(item.activityType))
@@ -92,7 +91,6 @@ export const getTradesWithTotalSum = (
           arrayOfSharePrices[i] = trade.pricePln;
         }
 
-        totalTradesProfitPln += dealProfitPln;
         return {
           ...trade,
           dealProfitPln: Number(dealProfitPln.toFixed(2)),
@@ -110,6 +108,6 @@ export const getTradesWithTotalSum = (
 
   return {
     tradesRows: tradesFilteredAndSorted,
-    totalTradesProfitPln: Number(totalTradesProfitPln.toFixed(2)),
+    totalTradesProfitPln: Number(tradesFilteredAndSorted.reduce((acc, item) => acc + item.dealProfitPln!, 0).toFixed(2)),
   };
 };
