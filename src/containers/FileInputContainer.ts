@@ -16,13 +16,16 @@ const mapBrokerToTransformFunction = (broker: IBrokerTypes) => {
   return transformRevolutCsvToGeneric;
 };
 
-const mapStateToFileInputProps = ({ ui }: IRootState) => {
+const mapStateToFileInputProps = ({ ui, data }: IRootState) => {
   const { broker } = ui;
+  const { startDate, endDate } = data;
 
   const csvTransformationFunction = mapBrokerToTransformFunction(broker);
 
   return {
     csvTransformationFunction,
+    customStartDate: startDate,
+    customEndDate: endDate
   };
 };
 

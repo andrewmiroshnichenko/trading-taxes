@@ -46,9 +46,13 @@ export const prepareTradesToCsv = (trades: TradeWithProfit[]): string =>
     .join("\n");
 
 export const getTradesWithTotalSum = (
-  genericData: DataItemWithPln[]
+  genericData: DataItemWithPln[],
+  customStartTimestamp?: string,
+  customEndTimestamp?: string
 ): TradesWithTotalSum => {
   const dealsMap = new Map() as Map<string, number[]>;
+  const setStartTimeStamp = customStartTimestamp ?  Date.parse(customStartTimestamp) : '';
+  const setEndTimeStamp = customEndTimestamp ? Date.parse(customEndTimestamp) : ''
   let totalTradesProfitPln = 0;
 
   const tradesFilteredAndSorted: TradeWithProfit[] = genericData
@@ -95,6 +99,13 @@ export const getTradesWithTotalSum = (
           numberOfMatchedShares: lowestLength,
         };
       }
+    })
+    .filter(item => {
+      if (!setStartTimeStamp && !setEndTimeStamp) return true;
+      const isGreaterThan = setStartTimeStamp ? Date.parse(item.tradeDate) > setStartTimeStamp : true;
+      const isSmallerThen = setEndTimeStamp ? Date.parse(item.tradeDate) < setEndTimeStamp : true;
+
+      return isGreaterThan && isSmallerThen;
     });
 
   return {
