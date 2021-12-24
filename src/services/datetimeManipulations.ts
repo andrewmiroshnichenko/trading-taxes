@@ -3,7 +3,7 @@ import subDays from "date-fns/subDays";
 import parse from "date-fns/parse";
 
 export const changeExanteDateFormat = (date: string): string => {
-  const parsed = parse(date, "dd/MM/yyyy", new Date());
+  const parsed = parse(date, "yyyy-MM-dd", new Date());
   const formatted = format(parsed, "MM/dd/yyyy");
   return formatted;
 };

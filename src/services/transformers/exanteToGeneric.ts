@@ -13,7 +13,7 @@ const getActivityType = (type: string): string => {
 
 export const transformExanteRow = (row: string | string[]): GenericDataItem => {
   if (typeof row === "string") {
-    const params = row.split(";");
+    const params = row.split(",");
     const symbol = params[2] === "None" ? "" : params[2];
     const tradeDate = changeExanteDateFormat(params[5].split(" ")[0]);
     const activityType = getActivityType(params[4]);
@@ -33,14 +33,14 @@ export const transformExanteRow = (row: string | string[]): GenericDataItem => {
       tradeDate,
     } as GenericDataItem;
   } else {
-    const amountContainingPart = row[0].includes(";None;") ? row[0] : row[1];
-    const quantityContainingPart = row[0].includes(";None;") ? row[1] : row[0];
-    const params = amountContainingPart.split(";");
+    const amountContainingPart = row[0].includes(",None,") ? row[0] : row[1];
+    const quantityContainingPart = row[0].includes(",None,") ? row[1] : row[0];
+    const params = amountContainingPart.split(",");
     const symbol = params[2];
     const tradeDate = changeExanteDateFormat(params[5].split(" ")[0]);
 
     const amount = parseFloat(params[6]);
-    const quantity = Math.abs(parseFloat(quantityContainingPart.split(";")[6]));
+    const quantity = Math.abs(parseFloat(quantityContainingPart.split(",")[6]));
     const currency = params[7];
     const activityType = amount < 0 ? "BUY" : "SELL";
 
@@ -68,6 +68,7 @@ export const transformExanteCsvToGeneric = (
   const items = dataItems
     .reverse()
     .reduce((acc, item) => {
+      if (item === '') return acc;
       const accLength = acc.length;
       const lastItemInAcc = acc[accLength - 1];
       if (!item.includes("COMMISSION") && !item.includes("TRADE")) {

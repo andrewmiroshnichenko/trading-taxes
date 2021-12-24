@@ -46,10 +46,13 @@ export const prepareTradesToCsv = (trades: TradeWithProfit[]): string =>
     .join("\n");
 
 export const getTradesWithTotalSum = (
-  genericData: DataItemWithPln[]
+  genericData: DataItemWithPln[],
+  customStartTimestamp?: string,
+  customEndTimestamp?: string
 ): TradesWithTotalSum => {
   const dealsMap = new Map() as Map<string, number[]>;
-  let totalTradesProfitPln = 0;
+  const setStartTimeStamp = customStartTimestamp ?  Date.parse(customStartTimestamp) : '';
+  const setEndTimeStamp = customEndTimestamp ? Date.parse(customEndTimestamp) : ''
 
   const tradesFilteredAndSorted: TradeWithProfit[] = genericData
     .filter((item) => revolutTransactionActivities.has(item.activityType))
@@ -88,17 +91,23 @@ export const getTradesWithTotalSum = (
           arrayOfSharePrices[i] = trade.pricePln;
         }
 
-        totalTradesProfitPln += dealProfitPln;
         return {
           ...trade,
           dealProfitPln: Number(dealProfitPln.toFixed(2)),
           numberOfMatchedShares: lowestLength,
         };
       }
+    })
+    .filter(item => {
+      if (!setStartTimeStamp && !setEndTimeStamp) return true;
+      const isGreaterThan = setStartTimeStamp ? Date.parse(item.tradeDate) > setStartTimeStamp : true;
+      const isSmallerThen = setEndTimeStamp ? Date.parse(item.tradeDate) < setEndTimeStamp : true;
+
+      return isGreaterThan && isSmallerThen;
     });
 
   return {
     tradesRows: tradesFilteredAndSorted,
-    totalTradesProfitPln: Number(totalTradesProfitPln.toFixed(2)),
+    totalTradesProfitPln: Number(tradesFilteredAndSorted.reduce((acc, item) => acc + item.dealProfitPln!, 0).toFixed(2)),
   };
 };
