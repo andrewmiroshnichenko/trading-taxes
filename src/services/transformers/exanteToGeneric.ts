@@ -68,6 +68,7 @@ export const transformExanteCsvToGeneric = (
   const items = dataItems
     .reverse()
     .reduce((acc, item) => {
+      if (item === '') return acc;
       const accLength = acc.length;
       const lastItemInAcc = acc[accLength - 1];
       if (!item.includes("COMMISSION") && !item.includes("TRADE")) {
