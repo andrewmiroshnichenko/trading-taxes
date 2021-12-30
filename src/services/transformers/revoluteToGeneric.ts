@@ -1,4 +1,5 @@
 import { GenericDataItem, IGenericParseResult } from "../../types/types";
+import { changeRevolutDateFormat } from "../datetimeManipulations";
 
 export const revolutTransactionActivities = new Set(["SELL", "BUY"]);
 export const revolutDividendActivities = new Set(["DIV", "DIVNRA"]);
@@ -7,25 +8,26 @@ const validActivityTypes = new Set([
   ...revolutDividendActivities,
 ]);
 
-export const transformRevolutRow = (rowString: string): GenericDataItem => {
-  const params = rowString.replace(/"/g, "").split(",");
-  const dealSign = -1 * Math.sign(parseFloat(params[7]));
-  const tradeDate = params[0];
-  const currency = params[2];
-  const amount = dealSign
-    ? dealSign * parseFloat(params[9])
-    : parseFloat(params[9]);
-  const price = dealSign * parseFloat(params[8]);
-  const quantity = Math.abs(parseFloat(params[7]));
-  const symbol = params[5];
-  const activityType = params[3];
+// date | symbol ((SELL/BUY/DIVIDEND) | type | quantity (number of shares, SELL/BUY) | price (BUY/SELL) | amount | currency
 
-  return {
-    price,
+export const transformRevolutRow = (rowString: string): GenericDataItem => {
+  const [
     tradeDate,
+    symbol,
+    activityType,
+    quantity,
+    price,
     amount,
     currency,
-    quantity,
+  ] = rowString.replace(/"/g, "").split(",");
+  const dealSign = -1 * Math.sign(parseFloat(quantity));
+
+  return {
+    price: dealSign * parseFloat(price),
+    tradeDate: changeRevolutDateFormat(tradeDate.split(" ")[0]),
+    amount: dealSign ? dealSign * parseFloat(amount) : parseFloat(amount),
+    currency,
+    quantity: Math.abs(parseFloat(quantity)),
     symbol,
     activityType,
   } as GenericDataItem;
@@ -38,12 +40,12 @@ export const transformRevolutCsvToGeneric = (
 
   const items = text
     .split("\n")
+    .filter((item) => !isNaN(parseInt(item, 10)))
     .map(transformRevolutRow)
-    .filter((v, index) => {
-      if (index !== 0) {
-        allActivities.add(v.activityType);
-      }
-      return index !== 0 && validActivityTypes.has(v.activityType);
+    .filter((v) => {
+      allActivities.add(v.activityType);
+
+      return validActivityTypes.has(v.activityType);
     });
 
   const excludedOperations = [...allActivities].filter(
