@@ -51,8 +51,12 @@ export const getTradesWithTotalSum = (
   customEndTimestamp?: string
 ): TradesWithTotalSum => {
   const dealsMap = new Map() as Map<string, number[]>;
-  const setStartTimeStamp = customStartTimestamp ?  Date.parse(customStartTimestamp) : '';
-  const setEndTimeStamp = customEndTimestamp ? Date.parse(customEndTimestamp) : ''
+  const setStartTimeStamp = customStartTimestamp
+    ? Date.parse(customStartTimestamp)
+    : "";
+  const setEndTimeStamp = customEndTimestamp
+    ? Date.parse(customEndTimestamp)
+    : "";
 
   const tradesFilteredAndSorted: TradeWithProfit[] = genericData
     .filter((item) => revolutTransactionActivities.has(item.activityType))
@@ -98,16 +102,24 @@ export const getTradesWithTotalSum = (
         };
       }
     })
-    .filter(item => {
+    .filter((item) => {
       if (!setStartTimeStamp && !setEndTimeStamp) return true;
-      const isGreaterThan = setStartTimeStamp ? Date.parse(item.tradeDate) > setStartTimeStamp : true;
-      const isSmallerThen = setEndTimeStamp ? Date.parse(item.tradeDate) < setEndTimeStamp : true;
+      const isGreaterThan = setStartTimeStamp
+        ? Date.parse(item.tradeDate) > setStartTimeStamp
+        : true;
+      const isSmallerThen = setEndTimeStamp
+        ? Date.parse(item.tradeDate) < setEndTimeStamp
+        : true;
 
       return isGreaterThan && isSmallerThen;
     });
 
   return {
     tradesRows: tradesFilteredAndSorted,
-    totalTradesProfitPln: Number(tradesFilteredAndSorted.reduce((acc, item) => acc + item.dealProfitPln!, 0).toFixed(2)),
+    totalTradesProfitPln: Number(
+      tradesFilteredAndSorted
+        .reduce((acc, item) => acc + item.dealProfitPln!, 0)
+        .toFixed(2)
+    ),
   };
 };

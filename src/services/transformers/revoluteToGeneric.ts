@@ -1,16 +1,44 @@
-import { GenericDataItem, IGenericParseResult } from "../../types/types";
+import {
+  AllActivities,
+  UnsupportedActivity,
+  GenericDataItem,
+  IGenericParseResult,
+} from "../../types/types";
 import { changeRevolutDateFormat } from "../datetimeManipulations";
 
 export const revolutTransactionActivities = new Set(["SELL", "BUY"]);
 export const revolutDividendActivities = new Set(["DIV", "DIVNRA"]);
-const validActivityTypes = new Set([
-  ...revolutTransactionActivities,
-  ...revolutDividendActivities,
-]);
+
+const validActivityTypes = new Set(["SELL", "BUY", "DIVIDEND", "CUSTODY_FEE"]);
 
 // date | symbol ((SELL/BUY/DIVIDEND) | type | quantity (number of shares, SELL/BUY) | price (BUY/SELL) | amount | currency
 
-export const transformRevolutRow = (rowString: string): GenericDataItem => {
+export function mapRevolutToGenericActivity(
+  activityType: string
+): AllActivities {
+  switch (activityType) {
+    case "SELL":
+      return "SELL";
+    case "BUY":
+      return "BUY";
+    case "DIVIDEND":
+      return "DIVIDEND";
+    case "CUSTODY_FEE":
+      return "FEE";
+    default:
+      return "UNSUPPORTED_ACTIVITY";
+  }
+}
+
+// {
+//   ["SELL"]: "SELL",
+//   ["BUY"]: "BUY",
+//   ["DIVIDEND"]: "DIVIDEND",
+// };
+
+export const transformRevolutRow = (
+  rowString: string
+): GenericDataItem | { activityType: UnsupportedActivity } => {
   const [
     tradeDate,
     symbol,
@@ -20,37 +48,37 @@ export const transformRevolutRow = (rowString: string): GenericDataItem => {
     amount,
     currency,
   ] = rowString.replace(/"/g, "").split(",");
-  const dealSign = -1 * Math.sign(parseFloat(quantity));
+  // If deal is a BUY, than account loses money, and deal sign should be negative
+  // Otherwise, we don't do anything, because other transaction types have proper signs.
+  const dealSign = activityType === "BUY" ? -1 : 0;
 
   return {
-    price: dealSign * parseFloat(price),
+    price: dealSign ? dealSign * parseFloat(price) : parseFloat(price),
     tradeDate: changeRevolutDateFormat(tradeDate.split(" ")[0]),
     amount: dealSign ? dealSign * parseFloat(amount) : parseFloat(amount),
     currency,
     quantity: Math.abs(parseFloat(quantity)),
     symbol,
-    activityType,
+    activityType: mapRevolutToGenericActivity(activityType),
   } as GenericDataItem;
 };
 
 export const transformRevolutCsvToGeneric = (
   text: string
 ): IGenericParseResult => {
-  const allActivities = new Set<string>();
-
-  const items = text
+  const validLines = text
     .split("\n")
-    .filter((item) => !isNaN(parseInt(item, 10)))
-    .map(transformRevolutRow)
-    .filter((v) => {
-      allActivities.add(v.activityType);
+    .filter((item) => !isNaN(parseInt(item, 10)));
 
-      return validActivityTypes.has(v.activityType);
-    });
-
-  const excludedOperations = [...allActivities].filter(
-    (activity) => !validActivityTypes.has(activity)
-  );
-
-  return { excludedOperations, items };
+  return {
+    excludedOperations: validLines
+      // Here we rely on a fact, that activityType will remain a third item in a Revolut csv row
+      .map((line) => line.replace(/"/g, "").split(",")[2])
+      .filter((activity) => !validActivityTypes.has(activity)),
+    items: validLines
+      .map(transformRevolutRow)
+      .filter(
+        (item) => item.activityType !== "UNSUPPORTED_ACTIVITY"
+      ) as GenericDataItem[],
+  };
 };
