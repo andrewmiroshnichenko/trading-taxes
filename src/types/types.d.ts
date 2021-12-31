@@ -50,7 +50,7 @@ export type IFee = GenericDataItemCommonFields & {
 
 export type GenericDataItem = IDividendOrCommission | ITrade | IFee;
 
-export type DataItemWithPln = GenericDataItem & {
+export type DataItemWithPln<T extends GenericDataItem> = T & {
   pricePln: number;
   rate: number;
   amountPln: number;

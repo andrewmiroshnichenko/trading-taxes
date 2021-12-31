@@ -30,12 +30,6 @@ export function mapRevolutToGenericActivity(
   }
 }
 
-// {
-//   ["SELL"]: "SELL",
-//   ["BUY"]: "BUY",
-//   ["DIVIDEND"]: "DIVIDEND",
-// };
-
 export const transformRevolutRow = (
   rowString: string
 ): GenericDataItem | { activityType: UnsupportedActivity } => {
@@ -54,7 +48,7 @@ export const transformRevolutRow = (
 
   return {
     price: dealSign ? dealSign * parseFloat(price) : parseFloat(price),
-    tradeDate: changeRevolutDateFormat(tradeDate.split(" ")[0]),
+    tradeDate: changeRevolutDateFormat(tradeDate.split(" ")[0]), // first item is a date, because tradeDate initially is in dateTime "01/01/2020 11:11:11"
     amount: dealSign ? dealSign * parseFloat(amount) : parseFloat(amount),
     currency,
     quantity: Math.abs(parseFloat(quantity)),
