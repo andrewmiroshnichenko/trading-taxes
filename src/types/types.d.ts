@@ -62,7 +62,7 @@ export interface IDividendsWithSum {
   totalTaxesPln: number;
 }
 
-export type TradeWithProfit = DataItemWithPln & {
+export type TradeWithProfit = DataItemWithPln<ITrade> & {
   dealProfitPln?: number;
 };
 
@@ -72,7 +72,7 @@ export interface TradesWithTotalSum {
 }
 
 export interface IFeeWithSum {
-  feeRows: DataItemWithPln[];
+  feeRows: DataItemWithPln<IFee>[];
   totalFeesPln: number;
 }
 

@@ -2,6 +2,8 @@ import {
   DataItemWithPln,
   TradesWithTotalSum,
   TradeWithProfit,
+  ITrade,
+  GenericDataItem,
 } from "../../types/types";
 import { revolutTransactionActivities } from "../transformers/revoluteToGeneric";
 
@@ -16,6 +18,11 @@ const TRADE_CSV_HEADER = [
   "Currency",
   "Deal profit",
 ];
+const isTradeActivity = (
+  item: DataItemWithPln<GenericDataItem>
+): item is DataItemWithPln<ITrade> =>
+  revolutTransactionActivities.has(item.activityType);
+
 export const prepareTradesToCsv = (trades: TradeWithProfit[]): string =>
   [TRADE_CSV_HEADER]
     .concat(
@@ -30,7 +37,7 @@ export const prepareTradesToCsv = (trades: TradeWithProfit[]): string =>
           pricePln,
           currency,
           dealProfitPln = 0,
-        }) => [
+        }): Array<string> => [
           tradeDate,
           symbol,
           activityType,
@@ -46,7 +53,7 @@ export const prepareTradesToCsv = (trades: TradeWithProfit[]): string =>
     .join("\n");
 
 export const getTradesWithTotalSum = (
-  genericData: DataItemWithPln[],
+  genericData: DataItemWithPln<GenericDataItem>[],
   customStartTimestamp?: string,
   customEndTimestamp?: string
 ): TradesWithTotalSum => {
@@ -59,7 +66,7 @@ export const getTradesWithTotalSum = (
     : "";
 
   const tradesFilteredAndSorted: TradeWithProfit[] = genericData
-    .filter((item) => revolutTransactionActivities.has(item.activityType))
+    .filter(isTradeActivity)
     .map((trade) => {
       if (!dealsMap.has(trade.symbol)) {
         dealsMap.set(trade.symbol, []);

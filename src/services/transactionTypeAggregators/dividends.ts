@@ -1,4 +1,9 @@
-import { IDividendsWithSum, DataItemWithPln } from "../../types/types";
+import {
+  IDividendsWithSum,
+  DataItemWithPln,
+  IDividendOrCommission,
+  GenericDataItem,
+} from "../../types/types";
 import { revolutDividendActivities } from "../transformers/revoluteToGeneric";
 
 const DIVIDEND_CSV_HEADER = [
@@ -11,7 +16,9 @@ const DIVIDEND_CSV_HEADER = [
   "Currency",
 ];
 
-export const prepareDividendToCsv = (dividends: DataItemWithPln[]): string =>
+export const prepareDividendToCsv = (
+  dividends: DataItemWithPln<IDividendOrCommission>[]
+): string =>
   [DIVIDEND_CSV_HEADER]
     .concat(
       dividends.map(
@@ -37,7 +44,7 @@ export const prepareDividendToCsv = (dividends: DataItemWithPln[]): string =>
     .join("\n");
 
 export const getDividendsWithTotalSum = (
-  allData: DataItemWithPln[]
+  allData: DataItemWithPln<GenericDataItem>[]
 ): IDividendsWithSum =>
   allData
     .filter((item) => revolutDividendActivities.has(item.activityType))
@@ -45,7 +52,9 @@ export const getDividendsWithTotalSum = (
       (acc, item, _, array) => {
         // Decision about type of aggregation field
         const key =
-          item.activityType === "DIV" ? "totalDividendsPln" : "totalTaxesPln";
+          item.activityType === "DIVIDEND"
+            ? "totalDividendsPln"
+            : "totalTaxesPln";
 
         return {
           ...acc,

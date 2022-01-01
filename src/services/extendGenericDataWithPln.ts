@@ -18,7 +18,7 @@ const getRateForGivenDate = (
 export const extendGenericDataWithPln = (
   genericData: GenericDataItem[],
   ratesMap: Map<string, number>
-): DataItemWithPln[] =>
+): DataItemWithPln<GenericDataItem>[] =>
   genericData.map((item) => {
     const properRate = getRateForGivenDate(item.tradeDate, ratesMap);
     const pricePln = parseFloat(
