@@ -46,6 +46,9 @@ export const collectExcludedOperations = (transactionString: string[]) =>
     )
   );
 
+// This is data structure of Exante csv export as of 01.2022. NOTE: Trades are not included here purposely !!!!
+// TransactionID (not used) | AccountID (not used) | SymbolID (not all types) | ISIN (not used)
+// Type | DateTime | amount | currency | (other non-used fields)
 export const transformExanteRow = (
   row: string
 ): GenericDataItem | { activityType: UnsupportedActivity } => {
@@ -62,11 +65,13 @@ export const transformExanteRow = (
 
   return {
     price: 0,
+    // Symbol in Exante has format BA.NYSE (second part for exchange name). We need only ticker
     symbol: symbol === "None" ? "" : symbol.split(".")[0],
     currency,
     activityType: getActivityType(activityType),
     quantity: 0,
     amount: Math.abs(parseFloat(amount)),
+    // Only date part from DateTime value is needed
     tradeDate: changeExanteDateFormat(tradeDate.split(" ")[0]),
   } as GenericDataItem;
 };
