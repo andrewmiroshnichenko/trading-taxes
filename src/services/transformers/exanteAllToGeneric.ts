@@ -7,6 +7,14 @@ import {
 import { changeExanteDateFormat } from "../datetimeManipulations";
 import { filterOutUnsupportedActivities } from "./utils";
 
+const validActivityTypes = new Set([
+  "DIVIDEND",
+  "COMMISSION",
+  "INTEREST",
+  "TAX",
+]);
+const EXANTE_FIELD_DELIMITER = " ";
+
 const getActivityType = (type: string): AllActivities => {
   if (type === "DIVIDEND") {
     return "DIVIDEND";
@@ -16,6 +24,12 @@ const getActivityType = (type: string): AllActivities => {
 
   return "UNSUPPORTED_ACTIVITY";
 };
+
+export const collectExcludedOperations = (transactionString: string[]) =>
+  transactionString
+    // Here we rely on a fact, that activityType will remain a fifth item in a Exante csv row
+    .map((line) => line.replace(/"/g, "").split(EXANTE_FIELD_DELIMITER)[4])
+    .filter((activity) => !validActivityTypes.has(activity));
 
 export const transformExanteRow = (
   row: string
@@ -29,7 +43,7 @@ export const transformExanteRow = (
     tradeDate,
     amount,
     currency,
-  ] = row.split(",");
+  ] = row.split(EXANTE_FIELD_DELIMITER);
 
   return {
     price: 0,
@@ -45,17 +59,13 @@ export const transformExanteRow = (
 export const transformExanteCsvToGeneric = (
   text: string
 ): IGenericParseResult => {
-  const allActivities = new Set<string>();
-
   const items = text
     .split("\n")
     .reverse()
     .filter((item) => !item.includes("TRADE") && item !== "");
 
-  const excludedOperations = Object.values(allActivities);
-
   return {
-    excludedOperations,
+    excludedOperations: collectExcludedOperations(items),
     items: items.map(transformExanteRow).filter(filterOutUnsupportedActivities),
   };
 };
