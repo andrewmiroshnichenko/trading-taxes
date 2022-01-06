@@ -1,17 +1,25 @@
-import { GenericDataItem, IGenericParseResult } from "../../types/types";
+import {
+  GenericDataItem,
+  IGenericParseResult,
+  AllActivities,
+  UnsupportedActivity,
+} from "../../types/types";
 import { changeExanteDateFormat } from "../datetimeManipulations";
+import { filterOutUnsupportedActivities } from "./utils";
 
-const getActivityType = (type: string): string => {
+const getActivityType = (type: string): AllActivities => {
   if (type === "DIVIDEND") {
-    return "DIV";
+    return "DIVIDEND";
   } else if (type === "TAX") {
-    return "DIVNRA";
+    return "TAX";
   }
 
-  return type;
+  return "UNSUPPORTED_ACTIVITY";
 };
 
-export const transformExanteRow = (row: string): GenericDataItem => {
+export const transformExanteRow = (
+  row: string
+): GenericDataItem | { activityType: UnsupportedActivity } => {
   const [
     notUsed0,
     notUsed1,
@@ -39,14 +47,15 @@ export const transformExanteCsvToGeneric = (
 ): IGenericParseResult => {
   const allActivities = new Set<string>();
 
-  const [_, ...dataItems] = text.split("\n");
-
-  const items = dataItems
+  const items = text
+    .split("\n")
     .reverse()
-    .filter((item) => !item.includes("TRADE") && item !== "")
-    .map(transformExanteRow);
+    .filter((item) => !item.includes("TRADE") && item !== "");
 
   const excludedOperations = Object.values(allActivities);
 
-  return { excludedOperations, items };
+  return {
+    excludedOperations,
+    items: items.map(transformExanteRow).filter(filterOutUnsupportedActivities),
+  };
 };
