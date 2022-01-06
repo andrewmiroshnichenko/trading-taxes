@@ -6,7 +6,7 @@ export const changeRevolutDateFormat = (date: string): string =>
   format(parse(date, "dd/MM/yyyy", new Date()), "MM/dd/yyyy");
 
 export const changeExanteDateFormat = (date: string): string =>
-  format(parse(date, "yyyy-MM-dd", new Date()), "MM/dd/yyyy");
+  format(parse(date, "dd/MM/yyyy", new Date()), "MM/dd/yyyy");
 
 export const formatToGeneralDate = (date: number | Date): string =>
   format(date, "yyyy-MM-dd");
