@@ -4,13 +4,15 @@ import {
   GenericDataItem,
   IGenericParseResult,
 } from "../../types/types";
-import { parseWithFallbackToZero } from "../../utils/number";
+import { parseFloatWithFallbackToZero } from "../../utils/number";
 import { changeRevolutDateFormat } from "../datetimeManipulations";
 
 export const revolutTransactionActivities = new Set(["SELL", "BUY"]);
 export const revolutDividendActivities = new Set(["DIV", "DIVNRA"]);
 
 const validActivityTypes = new Set(["SELL", "BUY", "DIVIDEND", "CUSTODY_FEE"]);
+
+// Helper functions section
 
 export function filterOutUnsupportedActivities<T>(
   item:
@@ -48,35 +50,31 @@ export function mapRevolutToGenericActivity(
   }
 }
 
+const parseFloatWithDealSign = (input: string, dealSign: number): number =>
+  dealSign
+    ? dealSign * parseFloatWithFallbackToZero(input)
+    : parseFloatWithFallbackToZero(input);
+
+// Helper functions sections ends
+
 // This is data structure of Revolut csv export as of 01.2022
 // date | symbol ((SELL/BUY/DIVIDEND) | type | quantity (number of shares, SELL/BUY) | price (BUY/SELL) | amount | currency
 
 export const transformRevolutRow = (
   rowString: string
 ): GenericDataItem | { activityType: UnsupportedActivity } => {
-  const [
-    tradeDate,
-    symbol,
-    activityType,
-    quantity,
-    price,
-    amount,
-    currency,
-  ] = rowString.replace(/"/g, "").split(",");
+  const [tradeDate, symbol, activityType, quantity, price, amount, currency] =
+    rowString.replace(/"/g, "").split(",");
   // If deal is a BUY, than account loses money, and deal sign should be negative
   // Otherwise, we don't do anything, because other transaction types have proper signs.
   const dealSign = activityType === "BUY" ? -1 : 0;
 
   return {
-    price: dealSign
-      ? dealSign * parseWithFallbackToZero(price)
-      : parseWithFallbackToZero(price),
+    price: parseFloatWithDealSign(price, dealSign),
     tradeDate: changeRevolutDateFormat(tradeDate.split(" ")[0]), // first item is a date, because tradeDate initially is in dateTime "01/01/2020 11:11:11"
-    amount: dealSign
-      ? dealSign * parseWithFallbackToZero(amount)
-      : parseWithFallbackToZero(amount),
+    amount: parseFloatWithDealSign(amount, dealSign),
     currency,
-    quantity: Math.abs(parseWithFallbackToZero(quantity)),
+    quantity: Math.abs(parseFloatWithFallbackToZero(quantity)),
     symbol,
     activityType: mapRevolutToGenericActivity(activityType),
   } as GenericDataItem;
