@@ -5,10 +5,7 @@ import {
   UnsupportedActivity,
 } from "../../types/types";
 import { changeExanteDateFormat } from "../datetimeManipulations";
-import {
-  filterOutUnsupportedActivities,
-  filterOnlyStringsWithDates,
-} from "./utils";
+import { filterOutUnsupportedActivities, itemsFromTextString } from "./utils";
 
 const validActivityTypes = new Set([
   "DIVIDEND",
@@ -65,7 +62,7 @@ export const transformExanteRow = (
 
   return {
     price: 0,
-    symbol: symbol === "None" ? "" : symbol,
+    symbol: symbol === "None" ? "" : symbol.split(".")[0],
     currency,
     activityType: getActivityType(activityType),
     quantity: 0,
@@ -77,7 +74,7 @@ export const transformExanteRow = (
 export const transformExanteCsvToGeneric = (
   text: string
 ): IGenericParseResult => {
-  const items = text.split("\n").reverse().filter(filterOnlyStringsWithDates);
+  const items = itemsFromTextString(text);
 
   return {
     excludedOperations: collectExcludedOperations(items),

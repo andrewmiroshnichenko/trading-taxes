@@ -1,14 +1,11 @@
-import { GenericDataItem, UnsupportedActivity } from "../../../types/types";
 import {
   transformRevolutRow,
   collectExcludedOperations,
 } from "../revoluteToGeneric";
-import {
-  filterOutUnsupportedActivities,
-  filterOnlyStringsWithDates,
-} from "../utils";
 
 describe("transformRevolutRow", () => {
+  // This is data structure of Revolut csv export as of 01.2022
+  // date | symbol ((SELL/BUY/DIVIDEND) | type | quantity (number of shares, SELL/BUY) | price (BUY/SELL) | amount | currency
   test("transforms SELL string with valid values", () => {
     const string = "21/01/2020 10:10:10,BA,SELL,2,100.5,201,USD";
     const output = {
@@ -53,31 +50,6 @@ describe("transformRevolutRow", () => {
 
     expect(transformRevolutRow(string).activityType).toBe(
       "UNSUPPORTED_ACTIVITY"
-    );
-  });
-});
-
-describe("filterOnlyStringsWithDates", () => {
-  it("leaves only strings which start with numbers", () => {
-    expect(["123", "", "daf"].filter(filterOnlyStringsWithDates)).toEqual([
-      "123",
-    ]);
-  });
-});
-
-describe("filterOutUnsupportedActivities", () => {
-  it("leaves only strings which start with numbers", () => {
-    const activitiesCollection: (
-      | Partial<GenericDataItem>
-      | { activityType: UnsupportedActivity }
-    )[] = [
-      { activityType: "SELL" },
-      { activityType: "DIVIDEND" },
-      { activityType: "UNSUPPORTED_ACTIVITY" },
-    ];
-
-    expect(activitiesCollection.filter(filterOutUnsupportedActivities)).toEqual(
-      [{ activityType: "SELL" }, { activityType: "DIVIDEND" }]
     );
   });
 });

@@ -6,22 +6,20 @@ import {
 } from "../../types/types";
 import { parseFloatWithFallbackToZero } from "../../utils/number";
 import { changeRevolutDateFormat } from "../datetimeManipulations";
-import {
-  filterOutUnsupportedActivities,
-  filterOnlyStringsWithDates,
-} from "./utils";
+import { filterOutUnsupportedActivities, itemsFromTextString } from "./utils";
 
 export const revolutTransactionActivities = new Set(["SELL", "BUY"]);
 export const revolutDividendActivities = new Set(["DIV", "DIVNRA"]);
 
 const validActivityTypes = new Set(["SELL", "BUY", "DIVIDEND", "CUSTODY_FEE"]);
+const REVOLUT_FIELD_DELIMITER = ",";
 
 // Helper functions section
 
 export const collectExcludedOperations = (transactionString: string[]) =>
   transactionString
     // Here we rely on a fact, that activityType will remain a third item in a Revolut csv row
-    .map((line) => line.replace(/"/g, "").split(",")[2])
+    .map((line) => line.replace(/"/g, "").split(REVOLUT_FIELD_DELIMITER)[2])
     .filter((activity) => !validActivityTypes.has(activity));
 
 export function mapRevolutToGenericActivity(
@@ -55,7 +53,7 @@ export const transformRevolutRow = (
   rowString: string
 ): GenericDataItem | { activityType: UnsupportedActivity } => {
   const [tradeDate, symbol, activityType, quantity, price, amount, currency] =
-    rowString.replace(/"/g, "").split(",");
+    rowString.replace(/"/g, "").split(REVOLUT_FIELD_DELIMITER);
   // If deal is a BUY, than account loses money, and deal sign should be negative
   // Otherwise, we don't do anything, because other transaction types have proper signs.
   const dealSign = activityType === "BUY" ? -1 : 0;
@@ -74,11 +72,11 @@ export const transformRevolutRow = (
 export const transformRevolutCsvToGeneric = (
   text: string
 ): IGenericParseResult => {
-  const validLines = text.split("\n").filter(filterOnlyStringsWithDates);
+  const items = itemsFromTextString(text);
 
   return {
-    excludedOperations: collectExcludedOperations(validLines),
-    items: validLines
+    excludedOperations: collectExcludedOperations(items),
+    items: items
       .map(transformRevolutRow)
       .filter(filterOutUnsupportedActivities),
   };

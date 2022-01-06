@@ -12,3 +12,6 @@ export function filterOutUnsupportedActivities(
 
 export const filterOnlyStringsWithDates = (item: string) =>
   !isNaN(parseInt(item, 10));
+
+export const itemsFromTextString = (text: string): string[] =>
+  text.split("\n").filter(filterOnlyStringsWithDates);
