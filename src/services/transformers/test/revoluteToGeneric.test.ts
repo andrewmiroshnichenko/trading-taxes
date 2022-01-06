@@ -1,10 +1,12 @@
 import { GenericDataItem, UnsupportedActivity } from "../../../types/types";
 import {
   transformRevolutRow,
-  filterOnlyStringsWithDates,
   collectExcludedOperations,
-  filterOutUnsupportedActivities,
 } from "../revoluteToGeneric";
+import {
+  filterOutUnsupportedActivities,
+  filterOnlyStringsWithDates,
+} from "../utils";
 
 describe("transformRevolutRow", () => {
   test("transforms SELL string with valid values", () => {
@@ -74,9 +76,9 @@ describe("filterOutUnsupportedActivities", () => {
       { activityType: "UNSUPPORTED_ACTIVITY" },
     ];
 
-    expect(
-      activitiesCollection.filter(filterOutUnsupportedActivities)
-    ).toEqual([{ activityType: "SELL" }, { activityType: "DIVIDEND" }]);
+    expect(activitiesCollection.filter(filterOutUnsupportedActivities)).toEqual(
+      [{ activityType: "SELL" }, { activityType: "DIVIDEND" }]
+    );
   });
 });
 

@@ -9,3 +9,6 @@ export function filterOutUnsupportedActivities(
 ): item is GenericDataItem {
   return item.activityType !== "UNSUPPORTED_ACTIVITY";
 }
+
+export const filterOnlyStringsWithDates = (item: string) =>
+  !isNaN(parseInt(item, 10));

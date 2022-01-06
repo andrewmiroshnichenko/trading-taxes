@@ -5,31 +5,49 @@ import {
   UnsupportedActivity,
 } from "../../types/types";
 import { changeExanteDateFormat } from "../datetimeManipulations";
-import { filterOutUnsupportedActivities } from "./utils";
+import {
+  filterOutUnsupportedActivities,
+  filterOnlyStringsWithDates,
+} from "./utils";
 
 const validActivityTypes = new Set([
   "DIVIDEND",
   "COMMISSION",
   "INTEREST",
   "TAX",
+  "ROLLOVER",
+  "TRADE", // Trade is valid activity, but should be calculated from different source file
 ]);
-const EXANTE_FIELD_DELIMITER = " ";
+const EXANTE_FIELD_DELIMITER = ",";
 
 const getActivityType = (type: string): AllActivities => {
   if (type === "DIVIDEND") {
     return "DIVIDEND";
   } else if (type === "TAX") {
     return "TAX";
+  } else if (type === "COMMISSION") {
+    return "FEE";
+  } else if (type === "INTEREST") {
+    return "INTEREST";
+  } else if (type === "ROLLOVER") {
+    return "ROLLOVER";
+  } else if (type === "TRADE") {
+    // Trade is valid activity, but should be calculated from different source file
+    return "UNSUPPORTED_ACTIVITY";
   }
 
   return "UNSUPPORTED_ACTIVITY";
 };
 
 export const collectExcludedOperations = (transactionString: string[]) =>
-  transactionString
-    // Here we rely on a fact, that activityType will remain a fifth item in a Exante csv row
-    .map((line) => line.replace(/"/g, "").split(EXANTE_FIELD_DELIMITER)[4])
-    .filter((activity) => !validActivityTypes.has(activity));
+  Array.from(
+    new Set(
+      transactionString
+        // Here we rely on a fact, that activityType will remain a fifth item in a Exante csv row
+        .map((line) => line.replace(/"/g, "").split(EXANTE_FIELD_DELIMITER)[4])
+        .filter((activity) => !validActivityTypes.has(activity))
+    )
+  );
 
 export const transformExanteRow = (
   row: string
@@ -59,10 +77,7 @@ export const transformExanteRow = (
 export const transformExanteCsvToGeneric = (
   text: string
 ): IGenericParseResult => {
-  const items = text
-    .split("\n")
-    .reverse()
-    .filter((item) => !item.includes("TRADE") && item !== "");
+  const items = text.split("\n").reverse().filter(filterOnlyStringsWithDates);
 
   return {
     excludedOperations: collectExcludedOperations(items),

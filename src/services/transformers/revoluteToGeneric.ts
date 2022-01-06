@@ -6,7 +6,10 @@ import {
 } from "../../types/types";
 import { parseFloatWithFallbackToZero } from "../../utils/number";
 import { changeRevolutDateFormat } from "../datetimeManipulations";
-import { filterOutUnsupportedActivities } from "./utils";
+import {
+  filterOutUnsupportedActivities,
+  filterOnlyStringsWithDates,
+} from "./utils";
 
 export const revolutTransactionActivities = new Set(["SELL", "BUY"]);
 export const revolutDividendActivities = new Set(["DIV", "DIVNRA"]);
@@ -14,9 +17,6 @@ export const revolutDividendActivities = new Set(["DIV", "DIVNRA"]);
 const validActivityTypes = new Set(["SELL", "BUY", "DIVIDEND", "CUSTODY_FEE"]);
 
 // Helper functions section
-
-export const filterOnlyStringsWithDates = (item: string) =>
-  !isNaN(parseInt(item, 10));
 
 export const collectExcludedOperations = (transactionString: string[]) =>
   transactionString
