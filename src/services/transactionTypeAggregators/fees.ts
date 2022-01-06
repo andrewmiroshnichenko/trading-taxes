@@ -1,4 +1,9 @@
-import { DataItemWithPln, IFeeWithSum } from "../../types/types";
+import {
+  DataItemWithPln,
+  IFeeWithSum,
+  IFee,
+  GenericDataItem,
+} from "../../types/types";
 
 const FEE_CSV_HEADER = [
   "Date",
@@ -11,8 +16,11 @@ const FEE_CSV_HEADER = [
 ];
 
 const feeActivities = new Set(["ROLLOVER", "COMMISSION", "INTEREST"]);
+const isFeeActivity = (
+  item: DataItemWithPln<GenericDataItem>
+): item is DataItemWithPln<IFee> => feeActivities.has(item.activityType);
 
-export const prepareFeeToCsv = (fees: DataItemWithPln[]): string =>
+export const prepareFeeToCsv = (fees: DataItemWithPln<IFee>[]): string =>
   [FEE_CSV_HEADER]
     .concat(
       fees.map(
@@ -24,7 +32,7 @@ export const prepareFeeToCsv = (fees: DataItemWithPln[]): string =>
           rate,
           amountPln,
           currency,
-        }) => [
+        }): Array<string> => [
           tradeDate,
           symbol,
           activityType,
@@ -37,20 +45,20 @@ export const prepareFeeToCsv = (fees: DataItemWithPln[]): string =>
     )
     .join("\n");
 
-export const getFeesWithTotalSum = (allData: DataItemWithPln[]): IFeeWithSum =>
-  allData
-    .filter((item) => feeActivities.has(item.activityType))
-    .reduce(
-      (acc, item, _, array) => {
-        return {
-          feeRows: array,
-          totalFeesPln: Number(
-            Number(acc.totalFeesPln + item.amountPln).toFixed(2)
-          ),
-        };
-      },
-      {
-        feeRows: [],
-        totalFeesPln: 0,
-      } as IFeeWithSum
-    );
+export const getFeesWithTotalSum = (
+  allData: DataItemWithPln<GenericDataItem>[]
+): IFeeWithSum =>
+  allData.filter(isFeeActivity).reduce(
+    (acc, item, _, array) => {
+      return {
+        feeRows: array,
+        totalFeesPln: Number(
+          Number(acc.totalFeesPln + item.amountPln).toFixed(2)
+        ),
+      };
+    },
+    {
+      feeRows: [],
+      totalFeesPln: 0,
+    } as IFeeWithSum
+  );

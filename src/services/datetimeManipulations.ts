@@ -2,11 +2,11 @@ import format from "date-fns/format";
 import subDays from "date-fns/subDays";
 import parse from "date-fns/parse";
 
-export const changeExanteDateFormat = (date: string): string => {
-  const parsed = parse(date, "yyyy-MM-dd", new Date());
-  const formatted = format(parsed, "MM/dd/yyyy");
-  return formatted;
-};
+export const changeRevolutDateFormat = (date: string): string =>
+  format(parse(date, "dd/MM/yyyy", new Date()), "MM/dd/yyyy");
+
+export const changeExanteDateFormat = (date: string): string =>
+  format(parse(date, "yyyy-MM-dd", new Date()), "MM/dd/yyyy");
 
 export const formatToGeneralDate = (date: number | Date): string =>
   format(date, "yyyy-MM-dd");

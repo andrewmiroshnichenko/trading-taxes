@@ -47,7 +47,11 @@ export const FileInput: React.FunctionComponent<Props> = ({
 
       // TODO merge this data retrieval into one function, in the shape of reduce
       const dividendsWithSum = getDividendsWithTotalSum(genericDataWithPlns);
-      const tradesWithSum = getTradesWithTotalSum(genericDataWithPlns, customStartDate, customEndDate);
+      const tradesWithSum = getTradesWithTotalSum(
+        genericDataWithPlns,
+        customStartDate,
+        customEndDate
+      );
       const feesWithSum = getFeesWithTotalSum(genericDataWithPlns);
       const dividends = prepareDividendToCsv(dividendsWithSum.dividendRows);
       const trades = prepareTradesToCsv(tradesWithSum.tradesRows);

@@ -2,6 +2,8 @@ import {
   DataItemWithPln,
   TradesWithTotalSum,
   TradeWithProfit,
+  ITrade,
+  GenericDataItem,
 } from "../../types/types";
 import { revolutTransactionActivities } from "../transformers/revoluteToGeneric";
 
@@ -16,6 +18,11 @@ const TRADE_CSV_HEADER = [
   "Currency",
   "Deal profit",
 ];
+const isTradeActivity = (
+  item: DataItemWithPln<GenericDataItem>
+): item is DataItemWithPln<ITrade> =>
+  revolutTransactionActivities.has(item.activityType);
+
 export const prepareTradesToCsv = (trades: TradeWithProfit[]): string =>
   [TRADE_CSV_HEADER]
     .concat(
@@ -30,7 +37,7 @@ export const prepareTradesToCsv = (trades: TradeWithProfit[]): string =>
           pricePln,
           currency,
           dealProfitPln = 0,
-        }) => [
+        }): Array<string> => [
           tradeDate,
           symbol,
           activityType,
@@ -46,16 +53,20 @@ export const prepareTradesToCsv = (trades: TradeWithProfit[]): string =>
     .join("\n");
 
 export const getTradesWithTotalSum = (
-  genericData: DataItemWithPln[],
+  genericData: DataItemWithPln<GenericDataItem>[],
   customStartTimestamp?: string,
   customEndTimestamp?: string
 ): TradesWithTotalSum => {
   const dealsMap = new Map() as Map<string, number[]>;
-  const setStartTimeStamp = customStartTimestamp ?  Date.parse(customStartTimestamp) : '';
-  const setEndTimeStamp = customEndTimestamp ? Date.parse(customEndTimestamp) : ''
+  const setStartTimeStamp = customStartTimestamp
+    ? Date.parse(customStartTimestamp)
+    : "";
+  const setEndTimeStamp = customEndTimestamp
+    ? Date.parse(customEndTimestamp)
+    : "";
 
   const tradesFilteredAndSorted: TradeWithProfit[] = genericData
-    .filter((item) => revolutTransactionActivities.has(item.activityType))
+    .filter(isTradeActivity)
     .map((trade) => {
       if (!dealsMap.has(trade.symbol)) {
         dealsMap.set(trade.symbol, []);
@@ -98,16 +109,24 @@ export const getTradesWithTotalSum = (
         };
       }
     })
-    .filter(item => {
+    .filter((item) => {
       if (!setStartTimeStamp && !setEndTimeStamp) return true;
-      const isGreaterThan = setStartTimeStamp ? Date.parse(item.tradeDate) > setStartTimeStamp : true;
-      const isSmallerThen = setEndTimeStamp ? Date.parse(item.tradeDate) < setEndTimeStamp : true;
+      const isGreaterThan = setStartTimeStamp
+        ? Date.parse(item.tradeDate) > setStartTimeStamp
+        : true;
+      const isSmallerThen = setEndTimeStamp
+        ? Date.parse(item.tradeDate) < setEndTimeStamp
+        : true;
 
       return isGreaterThan && isSmallerThen;
     });
 
   return {
     tradesRows: tradesFilteredAndSorted,
-    totalTradesProfitPln: Number(tradesFilteredAndSorted.reduce((acc, item) => acc + item.dealProfitPln!, 0).toFixed(2)),
+    totalTradesProfitPln: Number(
+      tradesFilteredAndSorted
+        .reduce((acc, item) => acc + item.dealProfitPln!, 0)
+        .toFixed(2)
+    ),
   };
 };

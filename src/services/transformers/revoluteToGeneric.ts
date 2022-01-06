@@ -1,54 +1,94 @@
-import { GenericDataItem, IGenericParseResult } from "../../types/types";
+import {
+  AllActivities,
+  UnsupportedActivity,
+  GenericDataItem,
+  IGenericParseResult,
+} from "../../types/types";
+import { parseFloatWithFallbackToZero } from "../../utils/number";
+import { changeRevolutDateFormat } from "../datetimeManipulations";
 
 export const revolutTransactionActivities = new Set(["SELL", "BUY"]);
 export const revolutDividendActivities = new Set(["DIV", "DIVNRA"]);
-const validActivityTypes = new Set([
-  ...revolutTransactionActivities,
-  ...revolutDividendActivities,
-]);
 
-export const transformRevolutRow = (rowString: string): GenericDataItem => {
-  const params = rowString.replace(/"/g, "").split(",");
-  const dealSign = -1 * Math.sign(parseFloat(params[7]));
-  const tradeDate = params[0];
-  const currency = params[2];
-  const amount = dealSign
-    ? dealSign * parseFloat(params[9])
-    : parseFloat(params[9]);
-  const price = dealSign * parseFloat(params[8]);
-  const quantity = Math.abs(parseFloat(params[7]));
-  const symbol = params[5];
-  const activityType = params[3];
+const validActivityTypes = new Set(["SELL", "BUY", "DIVIDEND", "CUSTODY_FEE"]);
+
+// Helper functions section
+
+export function filterOutUnsupportedActivities<T>(
+  item:
+    | Partial<GenericDataItem>
+    | {
+        activityType: UnsupportedActivity;
+      }
+): item is GenericDataItem {
+  return item.activityType !== "UNSUPPORTED_ACTIVITY";
+}
+
+export const filterOnlyStringsWithDates = (item: string) =>
+  !isNaN(parseInt(item, 10));
+
+export const collectExcludedOperations = (transactionString: string[]) =>
+  transactionString
+    // Here we rely on a fact, that activityType will remain a third item in a Revolut csv row
+    .map((line) => line.replace(/"/g, "").split(",")[2])
+    .filter((activity) => !validActivityTypes.has(activity));
+
+export function mapRevolutToGenericActivity(
+  activityType: string
+): AllActivities {
+  switch (activityType) {
+    case "SELL":
+      return "SELL";
+    case "BUY":
+      return "BUY";
+    case "DIVIDEND":
+      return "DIVIDEND";
+    case "CUSTODY_FEE":
+      return "FEE";
+    default:
+      return "UNSUPPORTED_ACTIVITY";
+  }
+}
+
+const parseFloatWithDealSign = (input: string, dealSign: number): number =>
+  dealSign
+    ? dealSign * parseFloatWithFallbackToZero(input)
+    : parseFloatWithFallbackToZero(input);
+
+// Helper functions sections ends
+
+// This is data structure of Revolut csv export as of 01.2022
+// date | symbol ((SELL/BUY/DIVIDEND) | type | quantity (number of shares, SELL/BUY) | price (BUY/SELL) | amount | currency
+
+export const transformRevolutRow = (
+  rowString: string
+): GenericDataItem | { activityType: UnsupportedActivity } => {
+  const [tradeDate, symbol, activityType, quantity, price, amount, currency] =
+    rowString.replace(/"/g, "").split(",");
+  // If deal is a BUY, than account loses money, and deal sign should be negative
+  // Otherwise, we don't do anything, because other transaction types have proper signs.
+  const dealSign = activityType === "BUY" ? -1 : 0;
 
   return {
-    price,
-    tradeDate,
-    amount,
+    price: parseFloatWithDealSign(price, dealSign),
+    tradeDate: changeRevolutDateFormat(tradeDate.split(" ")[0]), // first item is a date, because tradeDate initially is in dateTime "01/01/2020 11:11:11"
+    amount: parseFloatWithDealSign(amount, dealSign),
     currency,
-    quantity,
+    quantity: Math.abs(parseFloatWithFallbackToZero(quantity)),
     symbol,
-    activityType,
+    activityType: mapRevolutToGenericActivity(activityType),
   } as GenericDataItem;
 };
 
 export const transformRevolutCsvToGeneric = (
   text: string
 ): IGenericParseResult => {
-  const allActivities = new Set<string>();
+  const validLines = text.split("\n").filter(filterOnlyStringsWithDates);
 
-  const items = text
-    .split("\n")
-    .map(transformRevolutRow)
-    .filter((v, index) => {
-      if (index !== 0) {
-        allActivities.add(v.activityType);
-      }
-      return index !== 0 && validActivityTypes.has(v.activityType);
-    });
-
-  const excludedOperations = [...allActivities].filter(
-    (activity) => !validActivityTypes.has(activity)
-  );
-
-  return { excludedOperations, items };
+  return {
+    excludedOperations: collectExcludedOperations(validLines),
+    items: validLines
+      .map(transformRevolutRow)
+      .filter(filterOutUnsupportedActivities),
+  };
 };

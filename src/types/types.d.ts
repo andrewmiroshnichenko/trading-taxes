@@ -25,14 +25,14 @@ type GenericDataItemCommonFields = {
 };
 
 export type IDividendOrCommission = GenericDataItemCommonFields & {
-  activityType: "DIV" | "DIVNRA" | "COMMISSION";
+  activityType: DividendActivities;
   symbol: string;
   quantity: 0;
   price: 0;
 };
 
 export type ITrade = GenericDataItemCommonFields & {
-  activityType: "BUY" | "SELL";
+  activityType: TradeActivities;
   symbol: string;
   // Number of shares. Should alway be positive
   quantity: number;
@@ -42,7 +42,7 @@ export type ITrade = GenericDataItemCommonFields & {
 };
 
 export type IFee = GenericDataItemCommonFields & {
-  activityType: "INTEREST" | "COMMISSION" | "ROLLOVER";
+  activityType: FeeActivities;
   symbol: string;
   quantity: 0;
   price: 0;
@@ -50,7 +50,7 @@ export type IFee = GenericDataItemCommonFields & {
 
 export type GenericDataItem = IDividendOrCommission | ITrade | IFee;
 
-export type DataItemWithPln = GenericDataItem & {
+export type DataItemWithPln<T extends GenericDataItem> = T & {
   pricePln: number;
   rate: number;
   amountPln: number;
@@ -62,7 +62,7 @@ export interface IDividendsWithSum {
   totalTaxesPln: number;
 }
 
-export type TradeWithProfit = DataItemWithPln & {
+export type TradeWithProfit = DataItemWithPln<ITrade> & {
   dealProfitPln?: number;
 };
 
@@ -72,7 +72,7 @@ export interface TradesWithTotalSum {
 }
 
 export interface IFeeWithSum {
-  feeRows: DataItemWithPln[];
+  feeRows: DataItemWithPln<IFee>[];
   totalFeesPln: number;
 }
 
@@ -87,3 +87,14 @@ interface IGenericParseResult {
 }
 
 export type IBrokerTypes = "EXANTE" | "REVOLUT";
+
+export type TradeActivities = "BUY" | "SELL";
+export type DividendActivities = "DIVIDEND" | "TAX";
+export type FeeActivities = "FEE" | "ROLLOVER" | "INTEREST";
+export type UnsupportedActivity = "UNSUPPORTED_ACTIVITY";
+
+export type AllActivities =
+  | TradeActivities
+  | DividendActivities
+  | FeeActivities
+  | UnsupportedActivity;

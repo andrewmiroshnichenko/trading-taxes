@@ -1,9 +1,9 @@
 import React from "react";
 import {
   BrowserRouter as Router,
-  Redirect,
+  Navigate,
   Route,
-  Switch,
+  Routes,
 } from "react-router-dom";
 import AboutExante from "./pages/AboutExante/AboutExante";
 import AboutRevolut from "./pages/AboutRevolut/AboutRevolut";
@@ -11,12 +11,13 @@ import Main from "./pages/Main";
 
 const AppRouter: React.FunctionComponent = () => (
   <Router>
-    <Switch>
-      <Route exact path="/" component={Main} />
-      <Route exact path="/revolut-details" component={AboutRevolut} />
-      <Route exact path="/exante-details" component={AboutExante} />
-      <Redirect from="*" to="/" />
-    </Switch>
+    <Routes>
+      <Route path="/" element={<Main />} />
+
+      <Route path="/revolut-details" element={<AboutRevolut />} />
+      <Route path="/exante-details" element={<AboutExante />} />
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   </Router>
 );
 
