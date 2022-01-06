@@ -3,7 +3,7 @@ import { FileInput } from "../components/FileInput";
 import { updateData } from "../redux/slices/data";
 import { BROKERS } from "../redux/slices/ui";
 import { transformRevolutCsvToGeneric } from "../services/transformers/revoluteToGeneric";
-import { transformExanteCsvToGeneric } from "../services/transformers/exanteToGeneric";
+import { transformExanteCsvToGeneric } from "../services/transformers/exanteAllToGeneric";
 
 import { IBrokerTypes } from "../types/types";
 import { IRootState } from "../redux/store";
@@ -25,7 +25,7 @@ const mapStateToFileInputProps = ({ ui, data }: IRootState) => {
   return {
     csvTransformationFunction,
     customStartDate: startDate,
-    customEndDate: endDate
+    customEndDate: endDate,
   };
 };
 
