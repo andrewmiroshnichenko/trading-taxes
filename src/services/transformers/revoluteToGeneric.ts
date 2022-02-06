@@ -4,7 +4,10 @@ import {
   GenericDataItem,
   IGenericParseResult,
 } from "../../types/types";
-import { parseFloatWithFallbackToZero } from "../../utils/number";
+import {
+  parseFloatWithFallbackToZero,
+  parseFloatWithDealSign,
+} from "../../utils/number";
 import { changeRevolutDateFormat } from "../datetimeManipulations";
 import { filterOutUnsupportedActivities, itemsFromTextString } from "./utils";
 
@@ -38,11 +41,6 @@ export function mapRevolutToGenericActivity(
       return "UNSUPPORTED_ACTIVITY";
   }
 }
-
-const parseFloatWithDealSign = (input: string, dealSign: number): number =>
-  dealSign
-    ? dealSign * parseFloatWithFallbackToZero(input)
-    : parseFloatWithFallbackToZero(input);
 
 // Helper functions sections ends
 
