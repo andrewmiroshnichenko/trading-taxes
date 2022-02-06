@@ -9,7 +9,7 @@ import { IBrokerTypes } from "../types/types";
 import { IRootState } from "../redux/store";
 
 const mapBrokerToTransformFunction = (broker: IBrokerTypes) => {
-  if (broker === BROKERS.EXANTE) {
+  if (broker === BROKERS.EXANTE_ALL) {
     return transformExanteCsvToGeneric;
   }
 

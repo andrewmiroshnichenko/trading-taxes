@@ -86,7 +86,7 @@ interface IGenericParseResult {
   excludedOperations: string[];
 }
 
-export type IBrokerTypes = "EXANTE" | "REVOLUT";
+export type IBrokerTypes = "EXANTE_ALL" | "REVOLUT" | "EXANTE_TRADES";
 
 export type TradeActivities = "BUY" | "SELL";
 export type DividendActivities = "DIVIDEND" | "TAX";
