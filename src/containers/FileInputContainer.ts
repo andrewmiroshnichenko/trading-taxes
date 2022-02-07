@@ -4,6 +4,7 @@ import { updateData } from "../redux/slices/data";
 import { BROKERS } from "../redux/slices/ui";
 import { transformRevolutCsvToGeneric } from "../services/transformers/revoluteToGeneric";
 import { transformExanteCsvToGeneric } from "../services/transformers/exanteAllToGeneric";
+import { transformExanteTradesCsvToGeneric } from "../services/transformers/exanteTradesToGeneric";
 
 import { IBrokerTypes } from "../types/types";
 import { IRootState } from "../redux/store";
@@ -11,6 +12,10 @@ import { IRootState } from "../redux/store";
 const mapBrokerToTransformFunction = (broker: IBrokerTypes) => {
   if (broker === BROKERS.EXANTE_ALL) {
     return transformExanteCsvToGeneric;
+  }
+
+  if (broker === BROKERS.EXANTE_TRADES) {
+    return transformExanteTradesCsvToGeneric;
   }
 
   return transformRevolutCsvToGeneric;

@@ -68,7 +68,7 @@ export const transformExanteRow = (
     // Symbol in Exante has format BA.NYSE (second part for exchange name). We need only ticker
     symbol: symbol.split(".")[0],
     quantity: parseInt(quantity, 10),
-    price: parseFloatWithDealSign(amount, dealSign),
+    price: parseFloatWithDealSign(price, dealSign),
     // Only date part from DateTime value is needed
   } as ITrade;
 };

@@ -4,6 +4,7 @@ import { IBrokerTypes } from "../../types/types";
 
 export const BROKERS: Record<string, IBrokerTypes> = {
   EXANTE_ALL: "EXANTE_ALL",
+  EXANTE_TRADES: "EXANTE_TRADES",
   REVOLUT: "REVOLUT",
 };
 
