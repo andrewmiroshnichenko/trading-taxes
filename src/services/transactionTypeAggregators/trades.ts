@@ -66,6 +66,9 @@ export const getTradesWithTotalSum = (
     : "";
 
   const tradesFilteredAndSorted: TradeWithProfit[] = genericData
+    .sort((a, b) =>
+      Date.parse(a.tradeDate) > Date.parse(b.tradeDate) ? 1 : -1
+    )
     .filter(isTradeActivity)
     .map((trade) => {
       if (!dealsMap.has(trade.symbol)) {
