@@ -7,9 +7,13 @@ import { IBrokerTypes } from "../types/types";
 type Props = IBrokerSelectContainer;
 
 const BROKER_OPTIONS = {
-  EXANTE: {
-    label: "Exante.eu",
-    value: BROKERS.EXANTE,
+  EXANTE_ALL: {
+    label: "Exante.eu - transaction except trades",
+    value: BROKERS.EXANTE_ALL,
+  },
+  EXANTE_TRADES: {
+    label: "Exante.eu - trades only",
+    value: BROKERS.EXANTE_TRADES,
   },
   REVOLUT: {
     label: "Revolut",

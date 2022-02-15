@@ -3,8 +3,8 @@ import {
   collectExcludedOperations,
 } from "../exanteAllToGeneric";
 
-describe("transformExanteRow", () => {
-  // This is data structure of Exante csv export as of 01.2022. NOTE: Trades are not included here purposely !!!!
+describe("transformExanteFinancialTransactionRow", () => {
+  // This is data structure of Exante financial transactions csv export as of 01.2022. NOTE: Trades are not included here purposely !!!!
   // TransactionID (not used) | AccountID (not used) | SymbolID (not all types) | ISIN (not used)
   // Type | DateTime | amount | currency | (other non-used fields)
   test("transforms DIVIDEND string with valid values", () => {

@@ -16,7 +16,7 @@ const mapStateToSubsectionProps = (
   const total = data.parsedData[totalProp] as number;
 
   const { broker } = ui;
-  const isHidden = broker !== BROKERS.EXANTE && datasetProp === "interests";
+  const isHidden = broker !== BROKERS.EXANTE_ALL && datasetProp === "interests";
 
   return {
     dataset,

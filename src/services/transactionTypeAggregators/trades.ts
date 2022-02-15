@@ -66,6 +66,9 @@ export const getTradesWithTotalSum = (
     : "";
 
   const tradesFilteredAndSorted: TradeWithProfit[] = genericData
+    .sort((a, b) =>
+      Date.parse(a.tradeDate) > Date.parse(b.tradeDate) ? 1 : -1
+    )
     .filter(isTradeActivity)
     .map((trade) => {
       if (!dealsMap.has(trade.symbol)) {
@@ -74,6 +77,7 @@ export const getTradesWithTotalSum = (
 
       const arrayOfSharePrices = dealsMap.get(trade.symbol) as number[];
       const arrayOfSharePricesLength = arrayOfSharePrices?.length;
+      let dealProfitPln = 0;
 
       if (
         arrayOfSharePricesLength === 0 ||
@@ -83,9 +87,8 @@ export const getTradesWithTotalSum = (
         for (let i = 0; i < trade.quantity; i++) {
           arrayOfSharePrices[currentArrayOfSharePrices + i] = trade.pricePln;
         }
-        return trade;
+        return { ...trade, dealProfitPln };
       } else {
-        let dealProfitPln = 0;
         const remainedNumberOfTradeShares =
           trade.quantity - arrayOfSharePricesLength;
 
