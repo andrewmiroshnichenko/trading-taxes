@@ -61,6 +61,7 @@ export const doTradeCalculation =
 
     const arrayOfSharePrices = dealsMap.get(trade.symbol) as number[];
     const arrayOfSharePricesLength = arrayOfSharePrices?.length;
+    let dealProfitPln = 0;
 
     if (
       arrayOfSharePricesLength === 0 ||
@@ -69,9 +70,11 @@ export const doTradeCalculation =
       for (let i = 0; i < trade.quantity; i++) {
         arrayOfSharePrices[arrayOfSharePricesLength + i] = trade.pricePln;
       }
-      return trade;
+      return {
+        ...trade,
+        dealProfitPln,
+      };
     } else {
-      let dealProfitPln = 0;
       const remainedNumberOfTradeShares =
         trade.quantity - arrayOfSharePricesLength;
 
@@ -126,7 +129,7 @@ export const getTradesWithTotalSum = (
     tradesRows: tradesFilteredAndSorted,
     totalTradesProfitPln: Number(
       tradesFilteredAndSorted
-        .reduce((acc, item) => acc + item.dealProfitPln!, 0)
+        .reduce((acc, item) => acc + item.dealProfitPln, 0)
         .toFixed(2)
     ),
   };
