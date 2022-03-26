@@ -43,7 +43,7 @@ describe("filterByTimeRange", () => {
 });
 
 describe("doTradeCalculation", () => {
-  it("filter dates by start date", () => {
+  it("can not calculate profit based on one deal", () => {
     const testArrForCalculations: {
       symbol: string;
       pricePln: number;

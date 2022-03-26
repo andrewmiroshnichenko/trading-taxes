@@ -52,9 +52,17 @@ export const prepareTradesToCsv = (trades: TradeWithProfit[]): string =>
     )
     .join("\n");
 
+interface TradeFieldsRequiredForCalculation {
+  symbol: string;
+  pricePln: number;
+  quantity: number;
+}
+
 export const doTradeCalculation =
   (dealsMap = new Map<string, number[]>()) =>
-  (trade: DataItemWithPln<ITrade>) => {
+  <T extends TradeFieldsRequiredForCalculation>(
+    trade: T
+  ): T & { dealProfitPln: number } => {
     if (!dealsMap.has(trade.symbol)) {
       dealsMap.set(trade.symbol, []);
     }
@@ -94,7 +102,7 @@ export const doTradeCalculation =
       return {
         ...trade,
         dealProfitPln: Number(dealProfitPln.toFixed(2)),
-        numberOfMatchedShares: lowestLength,
+        // numberOfMatchedShares: lowestLength,
       };
     }
   };
