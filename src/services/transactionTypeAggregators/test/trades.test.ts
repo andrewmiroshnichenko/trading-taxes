@@ -1,6 +1,6 @@
-import { filterByTimeRange } from "../trades";
+import { filterByTimeRange, doTradeCalculation } from "../trades";
 
-const testArr: { tradeDate: string }[] = [
+const testArrForDatesFiltration: { tradeDate: string }[] = [
   { tradeDate: "12/20/2021" },
   { tradeDate: "12/21/2021" },
   { tradeDate: "12/22/2021" },
@@ -13,25 +13,52 @@ const endDate = "12/23/2021";
 
 describe("filterByTimeRange", () => {
   it("filter dates by start date", () => {
-    expect(testArr.filter(filterByTimeRange(undefined, endDate))).toEqual([
-      testArr[0],
-      testArr[1],
-      testArr[2],
+    expect(
+      testArrForDatesFiltration.filter(filterByTimeRange(undefined, endDate))
+    ).toEqual([
+      testArrForDatesFiltration[0],
+      testArrForDatesFiltration[1],
+      testArrForDatesFiltration[2],
     ]);
   });
   it("filters dates by end date", () => {
-    expect(testArr.filter(filterByTimeRange(startDate))).toEqual([
-      testArr[2],
-      testArr[3],
-      testArr[4],
+    expect(
+      testArrForDatesFiltration.filter(filterByTimeRange(startDate))
+    ).toEqual([
+      testArrForDatesFiltration[2],
+      testArrForDatesFiltration[3],
+      testArrForDatesFiltration[4],
     ]);
   });
   it("filters dates by both start and end dates", () => {
-    expect(testArr.filter(filterByTimeRange(startDate, endDate))).toEqual([
-      testArr[2],
-    ]);
+    expect(
+      testArrForDatesFiltration.filter(filterByTimeRange(startDate, endDate))
+    ).toEqual([testArrForDatesFiltration[2]]);
   });
   it("does not filter without parameters", () => {
-    expect(testArr.filter(filterByTimeRange())).toEqual(testArr);
+    expect(testArrForDatesFiltration.filter(filterByTimeRange())).toEqual(
+      testArrForDatesFiltration
+    );
+  });
+});
+
+describe("doTradeCalculation", () => {
+  it("filter dates by start date", () => {
+    const testArrForCalculations: {
+      symbol: string;
+      pricePln: number;
+      quantity: number;
+    }[] = [
+      { symbol: "BA", pricePln: 3, quantity: 1 },
+      // { symbol: "BA", pricePln: 3, quantity: 1 },
+      // { symbol: "BA", pricePln: 3, quantity: 1 },
+      // { symbol: "BA", pricePln: 3, quantity: 1 },
+      // { symbol: "BA", pricePln: 3, quantity: 1 },
+    ];
+
+    expect(testArrForCalculations.map(doTradeCalculation())[0]).toHaveProperty(
+      "dealProfitPln",
+      0
+    );
   });
 });
