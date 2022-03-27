@@ -98,3 +98,9 @@ export type AllActivities =
   | DividendActivities
   | FeeActivities
   | UnsupportedActivity;
+
+export interface TradeFieldsRequiredForCalculation {
+  symbol: string;
+  pricePln: number;
+  quantity: number;
+}

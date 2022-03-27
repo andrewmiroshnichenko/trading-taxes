@@ -4,6 +4,7 @@ import {
   TradeWithProfit,
   ITrade,
   GenericDataItem,
+  TradeFieldsRequiredForCalculation,
 } from "../../types/types";
 import { revolutTransactionActivities } from "../transformers/revoluteToGeneric";
 
@@ -51,12 +52,6 @@ export const prepareTradesToCsv = (trades: TradeWithProfit[]): string =>
       )
     )
     .join("\n");
-
-interface TradeFieldsRequiredForCalculation {
-  symbol: string;
-  pricePln: number;
-  quantity: number;
-}
 
 export const doTradeCalculation =
   (dealsMap = new Map<string, number[]>()) =>
