@@ -4,6 +4,7 @@ import {
   TradeWithProfit,
   ITrade,
   GenericDataItem,
+  TradeFieldsRequiredForCalculation,
 } from "../../types/types";
 import { revolutTransactionActivities } from "../transformers/revoluteToGeneric";
 
@@ -52,83 +53,86 @@ export const prepareTradesToCsv = (trades: TradeWithProfit[]): string =>
     )
     .join("\n");
 
+export const doTradeCalculation =
+  (dealsMap = new Map<string, number[]>()) =>
+  <T extends TradeFieldsRequiredForCalculation>(
+    trade: T
+  ): T & { dealProfitPln: number } => {
+    if (!dealsMap.has(trade.symbol)) {
+      dealsMap.set(trade.symbol, []);
+    }
+
+    const arrayOfSharePrices = dealsMap.get(trade.symbol) as number[];
+    const arrayOfSharePricesLength = arrayOfSharePrices?.length;
+    let dealProfitPln = 0;
+
+    if (
+      arrayOfSharePricesLength === 0 ||
+      arrayOfSharePrices[0] * trade.pricePln > 0
+    ) {
+      for (let i = 0; i < trade.quantity; i++) {
+        arrayOfSharePrices[arrayOfSharePricesLength + i] = trade.pricePln;
+      }
+      return {
+        ...trade,
+        dealProfitPln,
+      };
+    } else {
+      const remainedNumberOfTradeShares =
+        trade.quantity - arrayOfSharePricesLength;
+
+      const lowestLength =
+        remainedNumberOfTradeShares <= 0
+          ? trade.quantity
+          : arrayOfSharePricesLength;
+
+      for (let i = 0; i < lowestLength; i++) {
+        dealProfitPln +=
+          trade.pricePln + (arrayOfSharePrices.shift() as number);
+      }
+      for (let i = 0; i < remainedNumberOfTradeShares; i++) {
+        arrayOfSharePrices[i] = trade.pricePln;
+      }
+
+      return {
+        ...trade,
+        dealProfitPln: Number(dealProfitPln.toFixed(2)),
+        // numberOfMatchedShares: lowestLength,
+      };
+    }
+  };
+
+export const filterByTimeRange =
+  (customStartTimestamp?: string, customEndTimestamp?: string) =>
+  (item: Pick<DataItemWithPln<ITrade>, "tradeDate">) => {
+    const isGreaterThan = customStartTimestamp
+      ? Date.parse(item.tradeDate) > Date.parse(customStartTimestamp)
+      : true;
+    const isSmallerThen = customEndTimestamp
+      ? Date.parse(item.tradeDate) < Date.parse(customEndTimestamp)
+      : true;
+
+    return isGreaterThan && isSmallerThen;
+  };
+
 export const getTradesWithTotalSum = (
   genericData: DataItemWithPln<GenericDataItem>[],
   customStartTimestamp?: string,
   customEndTimestamp?: string
 ): TradesWithTotalSum => {
-  const dealsMap = new Map() as Map<string, number[]>;
-  const setStartTimeStamp = customStartTimestamp
-    ? Date.parse(customStartTimestamp)
-    : "";
-  const setEndTimeStamp = customEndTimestamp
-    ? Date.parse(customEndTimestamp)
-    : "";
-
   const tradesFilteredAndSorted: TradeWithProfit[] = genericData
+    .filter(isTradeActivity)
     .sort((a, b) =>
       Date.parse(a.tradeDate) > Date.parse(b.tradeDate) ? 1 : -1
     )
-    .filter(isTradeActivity)
-    .map((trade) => {
-      if (!dealsMap.has(trade.symbol)) {
-        dealsMap.set(trade.symbol, []);
-      }
-
-      const arrayOfSharePrices = dealsMap.get(trade.symbol) as number[];
-      const arrayOfSharePricesLength = arrayOfSharePrices?.length;
-      let dealProfitPln = 0;
-
-      if (
-        arrayOfSharePricesLength === 0 ||
-        arrayOfSharePrices[0] * trade.pricePln > 0
-      ) {
-        const currentArrayOfSharePrices = arrayOfSharePrices.length;
-        for (let i = 0; i < trade.quantity; i++) {
-          arrayOfSharePrices[currentArrayOfSharePrices + i] = trade.pricePln;
-        }
-        return { ...trade, dealProfitPln };
-      } else {
-        const remainedNumberOfTradeShares =
-          trade.quantity - arrayOfSharePricesLength;
-
-        const lowestLength =
-          remainedNumberOfTradeShares <= 0
-            ? trade.quantity
-            : arrayOfSharePricesLength;
-
-        for (let i = 0; i < lowestLength; i++) {
-          const valueFromArr = arrayOfSharePrices.shift() as number;
-          dealProfitPln += trade.pricePln + valueFromArr;
-        }
-        for (let i = 0; i < remainedNumberOfTradeShares; i++) {
-          arrayOfSharePrices[i] = trade.pricePln;
-        }
-
-        return {
-          ...trade,
-          dealProfitPln: Number(dealProfitPln.toFixed(2)),
-          numberOfMatchedShares: lowestLength,
-        };
-      }
-    })
-    .filter((item) => {
-      if (!setStartTimeStamp && !setEndTimeStamp) return true;
-      const isGreaterThan = setStartTimeStamp
-        ? Date.parse(item.tradeDate) > setStartTimeStamp
-        : true;
-      const isSmallerThen = setEndTimeStamp
-        ? Date.parse(item.tradeDate) < setEndTimeStamp
-        : true;
-
-      return isGreaterThan && isSmallerThen;
-    });
+    .map(doTradeCalculation())
+    .filter(filterByTimeRange(customStartTimestamp, customEndTimestamp));
 
   return {
     tradesRows: tradesFilteredAndSorted,
     totalTradesProfitPln: Number(
       tradesFilteredAndSorted
-        .reduce((acc, item) => acc + item.dealProfitPln!, 0)
+        .reduce((acc, item) => acc + item.dealProfitPln, 0)
         .toFixed(2)
     ),
   };

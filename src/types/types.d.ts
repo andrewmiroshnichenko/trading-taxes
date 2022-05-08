@@ -63,7 +63,7 @@ export interface IDividendsWithSum {
 }
 
 export type TradeWithProfit = DataItemWithPln<ITrade> & {
-  dealProfitPln?: number;
+  dealProfitPln: number;
 };
 
 export interface TradesWithTotalSum {
@@ -98,3 +98,9 @@ export type AllActivities =
   | DividendActivities
   | FeeActivities
   | UnsupportedActivity;
+
+export interface TradeFieldsRequiredForCalculation {
+  symbol: string;
+  pricePln: number;
+  quantity: number;
+}
